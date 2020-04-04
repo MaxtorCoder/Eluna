@@ -1370,12 +1370,12 @@ namespace LuaPlayer
      *
      * The item can be equipped, in bags or in bank.
      *
-     * @param uint64 guid : an item guid
+     * @param ObjectGuid guid : an item guid
      * @return [Item] item
      */
     int GetItemByGUID(lua_State* L, Player* player)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
 
         Eluna::Push(L, player->GetItemByGuid(ObjectGuid(guid)));
         return 1;
@@ -2117,11 +2117,11 @@ namespace LuaPlayer
     /**
      * Shows the mailbox window to the player from specified guid.
      *
-     * @param uint64 guid = playerguid : guid of the mailbox window sender
+     * @param ObjectGuid guid = playerguid : guid of the mailbox window sender
      */
     int SendShowMailBox(lua_State* L, Player* player)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2, player->GET_GUID());
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2, player->GET_GUID());
 
 #if (defined(CLASSIC) || defined(TBC))
         WorldPacket data(CMSG_GET_MAIL_LIST, 8);
@@ -3040,7 +3040,7 @@ namespace LuaPlayer
      * @param string text
      * @param uint32 lang : language the [Player] will speak
      * @param [Player] receiver : is the [Player] that will receive the whisper, if TrinityCore
-     * @param uint64 guid : is the GUID of a [Player] that will receive the whisper, not TrinityCore
+     * @param ObjectGuid guid : is the GUID of a [Player] that will receive the whisper, not TrinityCore
      */
     int Whisper(lua_State* L, Player* player)
     {
@@ -3049,7 +3049,7 @@ namespace LuaPlayer
 #ifdef TRINITY
         Player* receiver = Eluna::CHECKOBJ<Player>(L, 4);
 #else
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 4);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 4);
 #endif
 #ifdef TRINITY
         player->Whisper(text, (Language)lang, receiver);
@@ -4081,7 +4081,7 @@ namespace LuaPlayer
     /*int KillGOCredit(lua_State* L, Player* player)
     {
     uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
-    uint64 guid = Eluna::CHECKVAL<uint64>(L, 3);
+    ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 3);
     player->KillCreditGO(entry, guid);
     return 0;
     }*/

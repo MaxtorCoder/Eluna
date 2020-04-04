@@ -164,7 +164,7 @@ namespace LuaObject
      * 
      * On TrinityCore this value is unique across all maps
      *
-     * @return uint64 guid
+     * @return ObjectGuid guid
      */
     int GetGUID(lua_State* L, Object* obj)
     {

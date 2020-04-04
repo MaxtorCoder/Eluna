@@ -326,7 +326,7 @@ public:
 #ifdef BFA
     int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
 #else
-    int Register(lua_State* L, uint8 reg, uint32 entry, uint64 guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+    int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
 #endif
 
     // Checks
@@ -349,7 +349,7 @@ public:
     void OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj);
     bool OnCommand(Player* player, const char* text);
     void OnWorldUpdate(uint32 diff);
-    void OnLootItem(Player* pPlayer, Item* pItem, uint32 count, uint64 guid);
+    void OnLootItem(Player* pPlayer, Item* pItem, uint32 count, ObjectGuid guid);
     void OnLootMoney(Player* pPlayer, uint32 amount);
     void OnFirstLogin(Player* pPlayer);
     void OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
@@ -453,7 +453,7 @@ public:
     bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Channel* pChannel);
     bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver);
     void OnEmote(Player* pPlayer, uint32 emote);
-    void OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid);
+    void OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, ObjectGuid guid);
     void OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck);
     void OnLogin(Player* pPlayer);
     void OnLogout(Player* pPlayer);
@@ -502,12 +502,12 @@ public:
     void OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId);
 
     /* Group */
-    void OnAddMember(Group* group, uint64 guid);
-    void OnInviteMember(Group* group, uint64 guid);
-    void OnRemoveMember(Group* group, uint64 guid, uint8 method);
-    void OnChangeLeader(Group* group, uint64 newLeaderGuid, uint64 oldLeaderGuid);
+    void OnAddMember(Group* group, ObjectGuid guid);
+    void OnInviteMember(Group* group, ObjectGuid guid);
+    void OnRemoveMember(Group* group, ObjectGuid guid, uint8 method);
+    void OnChangeLeader(Group* group, ObjectGuid newLeaderGuid, ObjectGuid oldLeaderGuid);
     void OnDisband(Group* group);
-    void OnCreate(Group* group, uint64 leaderGuid, GroupType groupType);
+    void OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType);
 
     /* Map */
     void OnCreate(Map* map);

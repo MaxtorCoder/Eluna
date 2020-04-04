@@ -254,7 +254,7 @@ struct UniqueObjectKey
 #ifdef BFA
     ObjectGuid guid;
 #else
-    uint64 guid;
+    ObjectGuid guid;
 #endif
     uint32 instance_id;
 
@@ -265,7 +265,7 @@ struct UniqueObjectKey
         instance_id(instance_id)
     { }
 #else
-    UniqueObjectKey(T event_id, uint64 guid, uint32 instance_id) :
+    UniqueObjectKey(T event_id, ObjectGuid guid, uint32 instance_id) :
         event_id(event_id),
         guid(guid),
         instance_id(instance_id)

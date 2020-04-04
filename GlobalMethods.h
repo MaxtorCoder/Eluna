@@ -106,12 +106,12 @@ namespace LuaGlobalFunctions
     /**
      * Finds and Returns [Player] by guid if found
      *
-     * @param uint64 guid : guid of the [Player], you can get it with [Object:GetGUID]
+     * @param ObjectGuid guid : guid of the [Player], you can get it with [Object:GetGUID]
      * @return [Player] player
      */
     int GetPlayerByGUID(lua_State* L)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 1);
 #ifdef BFA
         Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid::Create<HIGHGUID_PLAYER>(guid)));
 #else
@@ -249,12 +249,12 @@ namespace LuaGlobalFunctions
     /**
      * Returns [Guild] by the leader's GUID
      *
-     * @param uint64 guid : the guid of a [Guild] leader
+     * @param ObjectGuid guid : the guid of a [Guild] leader
      * @return [Guild] guild, or `nil` if it doesn't exist
      */
     int GetGuildByLeaderGUID(lua_State* L)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 1);
 #ifdef BFA
         Eluna::Push(L, eGuildMgr->GetGuildByLeader(ObjectGuid::Create<HIGHGUID_PLAYER>(guid)));
 #else
@@ -282,7 +282,7 @@ namespace LuaGlobalFunctions
      * [Player] and [Creature] for example can have the same low GUID but not GUID.
      *
      * @param uint32 lowguid : low GUID of the [Player]
-     * @return uint64 guid
+     * @return ObjectGuid guid
      */
     int GetPlayerGUID(lua_State* L)
     {
@@ -302,7 +302,7 @@ namespace LuaGlobalFunctions
      * [Player] and [Item] for example can have the same low GUID but not GUID.
      *
      * @param uint32 lowguid : low GUID of the [Item]
-     * @return uint64 guid
+     * @return ObjectGuid guid
      */
     int GetItemGUID(lua_State* L)
     {
@@ -325,7 +325,7 @@ namespace LuaGlobalFunctions
      * @param uint32 lowguid : low GUID of the [GameObject]
      * @param uint32 entry : entry ID of the [GameObject]
      * @param uint32 mapId : map ID of the [GameObject]             <<< BFA ONLY
-     * @return uint64 guid
+     * @return ObjectGuid guid
      */
     int GetObjectGUID(lua_State* L)
     {
@@ -350,7 +350,7 @@ namespace LuaGlobalFunctions
      * @param uint32 lowguid : low GUID of the [Creature]
      * @param uint32 entry : entry ID of the [Creature]
      * @param uint32 mapId : map ID of the [Creature]             <<< BFA ONLY
-     * @return uint64 guid
+     * @return ObjectGuid guid
      */
     int GetUnitGUID(lua_State* L)
     {
@@ -381,12 +381,12 @@ namespace LuaGlobalFunctions
      * For example creatures in instances use the same low GUID assigned for that spawn in the database.
      * This is why to identify a creature you have to know the instanceId and low GUID. See [Map:GetIntstanceId]
      *
-     * @param uint64 guid : GUID of an [Object]
+     * @param ObjectGuid guid : GUID of an [Object]
      * @return uint32 lowguid : low GUID of the [Object]
      */
     int GetGUIDLow(lua_State* L)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 1);
 #ifdef BFA
         
 #else
@@ -459,12 +459,12 @@ namespace LuaGlobalFunctions
      *
      * GUID consist of entry ID, low GUID, and type ID.
      *
-     * @param uint64 guid : GUID of an [Object]
+     * @param ObjectGuid guid : GUID of an [Object]
      * @return int32 typeId : type ID of the [Object]
      */
     int GetGUIDType(lua_State* L)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 1);
         //Eluna::Push(L, static_cast<int>(GUID_HIPART(guid)));
         return 1;
     }
@@ -474,12 +474,12 @@ namespace LuaGlobalFunctions
      *
      * GUID consist of entry ID, low GUID, and type ID.
      *
-     * @param uint64 guid : GUID of an [Creature] or [GameObject]
+     * @param ObjectGuid guid : GUID of an [Creature] or [GameObject]
      * @return uint32 entry : entry ID, or `0` if `guid` is not a [Creature] or [GameObject]
      */
     int GetGUIDEntry(lua_State* L)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 1);
         //Eluna::Push(L, GUID_ENPART(guid));
         return 1;
     }
@@ -592,7 +592,7 @@ namespace LuaGlobalFunctions
 
     static int RegisterUniqueHelper(lua_State* L, int regtype)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 1);
         uint32 instanceId = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 3);
         luaL_checktype(L, 4, LUA_TFUNCTION);
@@ -1181,7 +1181,7 @@ namespace LuaGlobalFunctions
      * @proto cancel = (guid, instance_id, event, function)
      * @proto cancel = (guid, instance_id, event, function, shots)
      *
-     * @param uint64 guid : the GUID of a single [Creature]
+     * @param ObjectGuid guid : the GUID of a single [Creature]
      * @param uint32 instance_id : the instance ID of a single [Creature]
      * @param uint32 event : refer to CreatureEvents above
      * @param function function : function that will be called when the event occurs
@@ -2782,7 +2782,7 @@ namespace LuaGlobalFunctions
      *
      * @proto (entry)
      * @proto (entry, event_type)
-     * @param uint64 guid : the GUID of a single [Creature] whose handlers will be cleared
+     * @param ObjectGuid guid : the GUID of a single [Creature] whose handlers will be cleared
      * @param uint32 instance_id : the instance ID of a single [Creature] whose handlers will be cleared
      * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterCreatureEvent]
      */
@@ -2792,7 +2792,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 3))
         {
-            uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+            ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 1);
             uint32 instanceId = Eluna::CHECKVAL<uint32>(L, 2);
 
             Eluna* E = Eluna::GetEluna(L);
@@ -2801,7 +2801,7 @@ namespace LuaGlobalFunctions
         }
         else
         {
-            uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+            ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 1);
             uint32 instanceId = Eluna::CHECKVAL<uint32>(L, 2);
             uint32 event_type = Eluna::CHECKVAL<uint32>(L, 3);
             Eluna::GetEluna(L)->CreatureUniqueBindings->Clear(Key((Hooks::CreatureEvents)event_type, guid, instanceId));

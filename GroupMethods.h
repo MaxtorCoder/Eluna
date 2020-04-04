@@ -15,12 +15,12 @@ namespace LuaGroup
     /**
      * Returns 'true' if the [Player] is the [Group] leader
      *
-     * @param uint64 guid : guid of a possible leader
+     * @param ObjectGuid guid : guid of a possible leader
      * @return bool isLeader
      */
     int IsLeader(lua_State* L, Group* group)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
         Eluna::Push(L, group->IsLeader(ObjectGuid(guid)));
         return 1;
     }
@@ -61,12 +61,12 @@ namespace LuaGroup
     /**
      * Returns 'true' if the [Player] is a member of this [Group]
      *
-     * @param uint64 guid : guid of a player
+     * @param ObjectGuid guid : guid of a player
      * @return bool isMember
      */
     int IsMember(lua_State* L, Group* group)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
         Eluna::Push(L, group->IsMember(ObjectGuid(guid)));
         return 1;
     }
@@ -74,12 +74,12 @@ namespace LuaGroup
     /**
      * Returns 'true' if the [Player] is an assistant of this [Group]
      *
-     * @param uint64 guid : guid of a player
+     * @param ObjectGuid guid : guid of a player
      * @return bool isAssistant
      */
     int IsAssistant(lua_State* L, Group* group)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
         Eluna::Push(L, group->IsAssistant(ObjectGuid(guid)));
         return 1;
     }
@@ -195,7 +195,7 @@ namespace LuaGroup
     /**
      * Returns [Group] leader GUID
      *
-     * @return uint64 leaderGUID
+     * @return ObjectGuid leaderGUID
      */
     int GetLeaderGUID(lua_State* L, Group* group)
     {
@@ -210,7 +210,7 @@ namespace LuaGroup
     /**
      * Returns the [Group]'s GUID
      *
-     * @return uint64 groupGUID
+     * @return ObjectGuid groupGUID
      */
     int GetGUID(lua_State* L, Group* group)
     {
@@ -226,7 +226,7 @@ namespace LuaGroup
      * Returns a [Group] member's GUID by their name
      *
      * @param string name : the [Player]'s name
-     * @return uint64 memberGUID
+     * @return ObjectGuid memberGUID
      */
     int GetMemberGUID(lua_State* L, Group* group)
     {
@@ -253,12 +253,12 @@ namespace LuaGroup
     /**
      * Returns the [Player]'s subgroup ID of this [Group]
      *
-     * @param uint64 guid : guid of the player
+     * @param ObjectGuid guid : guid of the player
      * @return uint8 subGroupID : a valid subgroup ID or MAX_RAID_SUBGROUPS+1
      */
     int GetMemberGroup(lua_State* L, Group* group)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
         Eluna::Push(L, group->GetMemberGroup(ObjectGuid(guid)));
         return 1;
     }
@@ -266,11 +266,11 @@ namespace LuaGroup
     /**
      * Sets the leader of this [Group]
      *
-     * @param uint64 guid : guid of the new leader
+     * @param ObjectGuid guid : guid of the new leader
      */
     int SetLeader(lua_State* L, Group* group)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
         group->ChangeLeader(ObjectGuid(guid));
         group->SendUpdate();
         return 0;
@@ -310,13 +310,13 @@ namespace LuaGroup
      * };
      * </pre>
      *
-     * @param uint64 guid : guid of the player to remove
+     * @param ObjectGuid guid : guid of the player to remove
      * @param [RemoveMethod] method : method used to remove the player
      * @return bool removed
      */
     int RemoveMember(lua_State* L, Group* group)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
         uint32 method = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
 #ifdef TRINITY || AZEROTHCORE
@@ -350,12 +350,12 @@ namespace LuaGroup
     /**
      * Sets the member's subGroup
      *
-     * @param uint64 guid : guid of the player to move
+     * @param ObjectGuid guid : guid of the player to move
      * @param uint8 groupID : the subGroup's ID
      */
     int SetMembersGroup(lua_State* L, Group* group)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
         uint8 subGroup = Eluna::CHECKVAL<uint8>(L, 3);
 
         if (subGroup >= MAX_RAID_SUBGROUPS)

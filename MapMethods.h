@@ -201,11 +201,11 @@ namespace LuaMap
     /**
      * Returns a [WorldObject] by its GUID from the map if it is spawned.
      *
-     * @param uint64 guid
+     * @param ObjectGuid guid
      */
     int GetWorldObject(lua_State* L, Map* map)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
 
 #ifdef TRINITY || AZEROTHCORE
         switch (GUID_HIPART(guid))

@@ -167,7 +167,7 @@ namespace LuaPacket
      */
     int ReadGUID(lua_State* L, WorldPacket* packet)
     {
-        uint64 guid;
+        ObjectGuid guid;
         (*packet) >> guid;
         Eluna::Push(L, guid);
         return 1;
@@ -193,7 +193,7 @@ namespace LuaPacket
      */
     int WriteGUID(lua_State* L, WorldPacket* packet)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
         (*packet) << guid;
         return 0;
     }
