@@ -33,7 +33,7 @@ namespace LuaPlayer
     int HasTalent(lua_State* L, Player* player)
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
-        uint8 maxSpecs = MAX_TALENT_SPECS;
+        uint8 maxSpecs = MAX_SPECIALIZATIONS;
         uint8 spec = Eluna::CHECKVAL<uint8>(L, 3);
 
         if (spec >= maxSpecs)
@@ -127,7 +127,6 @@ namespace LuaPlayer
         return 1;
     }
 
-#ifndef CLASSIC
     /**
      * Returns 'true' if the [Player] has a title by specific ID, 'false' otherwise.
      *
@@ -137,13 +136,14 @@ namespace LuaPlayer
     int HasTitle(lua_State* L, Player* player)
     {
         uint32 id = Eluna::CHECKVAL<uint32>(L, 2);
+
         CharTitlesEntry const* titleInfo = sCharTitlesStore.LookupEntry(id);
         if (titleInfo)
             Eluna::Push(L, player->HasTitle(titleInfo));
+
         return 1;
     }
-#endif
-    
+
     /**
      * Returns 'true' if the [Player] has the given amount of item entry specified, 'false' otherwise.
      *
@@ -157,6 +157,7 @@ namespace LuaPlayer
         uint32 itemId = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 count = Eluna::CHECKVAL<uint32>(L, 3, 1);
         bool check_bank = Eluna::CHECKVAL<bool>(L, 4, false);
+
         Eluna::Push(L, player->HasItemCount(itemId, count, check_bank));
         return 1;
     }
@@ -211,11 +212,7 @@ namespace LuaPlayer
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
 
-#ifdef TRINITY
         Eluna::Push(L, player->GetSpellHistory()->HasCooldown(spellId));
-#else
-        Eluna::Push(L, player->HasSpellCooldown(spellId));
-#endif
         return 1;
     }
 
@@ -240,11 +237,7 @@ namespace LuaPlayer
      */
     int CanSpeak(lua_State* L, Player* player)
     {
-#ifdef TRINITY
         Eluna::Push(L, player->GetSession()->CanSpeak());
-#else
-        Eluna::Push(L, player->CanSpeak());
-#endif
         return 1;
     }
 
@@ -259,7 +252,6 @@ namespace LuaPlayer
         return 1;
     }
 
-#ifndef CLASSIC
     /**
      * Returns 'true' if the [Player] can fly, 'false' otherwise.
      *
@@ -270,45 +262,7 @@ namespace LuaPlayer
         Eluna::Push(L, player->CanFly());
         return 1;
     }
-#endif
 
-#ifdef CLASSIC
-    /**
-     * Returns [Player] kills
-     *
-     * @param bool honorable = true : if victims are honorable
-     * @return uint32 kills
-     */
-    int GetHonorStoredKills(lua_State* L, Player* player)
-    {
-        bool honorable = Eluna::CHECKVAL<bool>(L, 2, true);
-
-        Eluna::Push(L, player->GetHonorStoredKills(honorable));
-        return 1;
-    }
-
-    /**
-     * Returns rank points
-     *
-     * @return float rankPoints
-     */
-    int GetRankPoints(lua_State* L, Player* player)
-    {
-        Eluna::Push(L, player->GetRankPoints());
-        return 1;
-    }
-
-    /**
-     * Returns last week's standing position
-     *
-     * @return int32 standingPos
-     */
-    int GetHonorLastWeekStandingPos(lua_State* L, Player* player)
-    {
-        Eluna::Push(L, player->GetHonorLastWeekStandingPos());
-        return 1;
-    }
-#endif
 
     /**
      * Returns 'true' if the [Player] is currently in water, 'false' otherwise.
@@ -332,36 +286,6 @@ namespace LuaPlayer
         return 1;
     }
 
-#ifdef CLASSIC
-    /**
-     * Updates the [Player]s weekly honor status
-     */
-    int UpdateHonor(lua_State* L, Player* player)
-    {
-        player->UpdateHonor();
-        return 0;
-    }
-
-    /**
-     * Resets the [Player]s weekly honor status
-     */
-    int ResetHonor(lua_State* L, Player* player)
-    {
-        player->ResetHonor();
-        return 0;
-    }
-
-    /**
-     * Clears all of [Player]s weekly honor status
-     */
-    int ClearHonorInfo(lua_State* L, Player* player)
-    {
-        player->ClearHonorInfo();
-        return 0;
-    }
-#endif
-
-#ifndef CLASSIC
     /**
      * Returns 'true' if the [Player] is currently flying, 'false' otherwise.
      *
@@ -372,7 +296,6 @@ namespace LuaPlayer
         Eluna::Push(L, player->IsFlying());
         return 1;
     }
-#endif
 
     /**
      * Returns 'true' if the [Player] is in a [Group], 'false' otherwise.
@@ -405,15 +328,10 @@ namespace LuaPlayer
      */
     int IsGM(lua_State* L, Player* player)
     {
-#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->IsGameMaster());
-#else
-        Eluna::Push(L, player->isGameMaster());
-#endif
         return 1;
     }
 
-#ifndef CLASSIC
     /**
      * Returns 'true' if the [Player] is in an arena team specified by type, 'false' otherwise.
      *
@@ -429,7 +347,6 @@ namespace LuaPlayer
             Eluna::Push(L, false);
         return 1;
     }
-#endif
     
     /**
      * Returns 'true' if the [Player] is immune to everything.
@@ -463,11 +380,7 @@ namespace LuaPlayer
      */
     int IsHorde(lua_State* L, Player* player)
     {
-#ifdef AZEROTHCORE
-        Eluna::Push(L, (player->GetTeamId() == TEAM_HORDE));
-#else
         Eluna::Push(L, (player->GetTeam() == HORDE));
-#endif
         return 1;
     }
 
@@ -478,11 +391,7 @@ namespace LuaPlayer
      */
     int IsAlliance(lua_State* L, Player* player)
     {
-#ifdef AZEROTHCORE
-        Eluna::Push(L, (player->GetTeamId() == TEAM_ALLIANCE));
-#else
         Eluna::Push(L, (player->GetTeam() == ALLIANCE));
-#endif
         return 1;
     }
 
@@ -593,11 +502,7 @@ namespace LuaPlayer
      */
     int IsTaxiCheater(lua_State* L, Player* player)
     {
-#ifdef MANGOS
-        Eluna::Push(L, player->IsTaxiCheater());
-#else
         Eluna::Push(L, player->isTaxiCheater());
-#endif
         return 1;
     }
 
@@ -625,7 +530,7 @@ namespace LuaPlayer
      */
     int IsRested(lua_State* L, Player* player)
     {
-        Eluna::Push(L, player->GetRestBonus() > 0.0f);
+        Eluna::Push(L, !player->HasPlayerFlag(PlayerFlags::PLAYER_FLAGS_RESTING));
         return 1;
     }
 
@@ -636,15 +541,10 @@ namespace LuaPlayer
      */
     int InBattlegroundQueue(lua_State* L, Player* player)
     {
-#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->InBattlegroundQueue());
-#else
-        Eluna::Push(L, player->InBattleGroundQueue());
-#endif
         return 1;
     }
 
-#ifndef CLASSIC
     /**
      * Returns 'true' if the [Player] is currently in an arena, 'false' otherwise.
      *
@@ -655,7 +555,6 @@ namespace LuaPlayer
         Eluna::Push(L, player->InArena());
         return 1;
     }
-#endif
 
     /**
      * Returns 'true' if the [Player] is currently in a [BattleGround], 'false' otherwise.
@@ -664,11 +563,7 @@ namespace LuaPlayer
      */
     int InBattleground(lua_State* L, Player* player)
     {
-#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->InBattleground());
-#else
-        Eluna::Push(L, player->InBattleGround());
-#endif
         return 1;
     }
 
@@ -753,7 +648,6 @@ namespace LuaPlayer
         return 1;
     }*/
 
-#if (!defined(TBC) && !defined(CLASSIC))
     /**
      * Returns the amount of available specs the [Player] currently has
      *
@@ -761,7 +655,7 @@ namespace LuaPlayer
      */
     int GetSpecsCount(lua_State* L, Player* player)
     {
-        Eluna::Push(L, player->GetSpecsCount());
+        Eluna::Push(L, MAX_SPECIALIZATIONS);
         return 1;
     }
 
@@ -772,59 +666,9 @@ namespace LuaPlayer
      */
     int GetActiveSpec(lua_State* L, Player* player)
     {
-        Eluna::Push(L, player->GetActiveSpec());
+        Eluna::Push(L, player->GetPrimarySpecialization());
         return 1;
     }
-#endif
-
-#ifdef WOTLK
-    /**
-     * Returns the normal phase of the player instead of the actual phase possibly containing GM phase
-     *
-     * @return uint32 phasemask
-     */
-    int GetPhaseMaskForSpawn(lua_State* L, Player* player)
-    {
-        Eluna::Push(L, player->GetPhaseMaskForSpawn());
-        return 1;
-    }
-#endif
-
-#ifdef(TBC) || defined (WOTLK)
-    /**
-     * Returns the [Player]s current amount of Arena Points
-     *
-     * @return uint32 arenaPoints
-     */
-    int GetArenaPoints(lua_State* L, Player* player)
-    {
-        Eluna::Push(L, player->GetArenaPoints());
-        return 1;
-    }
-
-    /**
-     * Returns the [Player]s current amount of Honor Points
-     *
-     * @return uint32 honorPoints
-     */
-    int GetHonorPoints(lua_State* L, Player* player)
-    {
-        Eluna::Push(L, player->GetHonorPoints());
-        return 1;
-    }
-#endif
-#ifdef(CLASSIC) || defined(TBC) || defined (WOTLK)
-    /**
-     * Returns the [Player]s current shield block value
-     *
-     * @return uint32 blockValue
-     */
-    int GetShieldBlockValue(lua_State* L, Player* player)
-    {
-        Eluna::Push(L, player->GetShieldBlockValue());
-        return 1;
-    }
-#endif
 
     /**
      * Returns the [Player]s cooldown delay by specified [Spell] ID
@@ -836,14 +680,11 @@ namespace LuaPlayer
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
 
-#ifdef TRINITY
         if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellId))
             Eluna::Push(L, player->GetSpellHistory()->GetRemainingCooldown(spellInfo));
         else
             Eluna::Push(L, 0);
-#else
-        Eluna::Push(L, uint32(player->GetSpellCooldownDelay(spellId)));
-#endif
+
         return 1;
     }
 
@@ -858,7 +699,6 @@ namespace LuaPlayer
         return 1;
     }
 
-#ifdef TRINITY || AZEROTHCORE
     /**
      * Returns the faction ID the [Player] is currently flagged as champion for
      *
@@ -869,7 +709,6 @@ namespace LuaPlayer
         Eluna::Push(L, player->GetChampioningFaction());
         return 1;
     }
-#endif
 
     /**
      * Returns [Player]s original sub group
@@ -939,7 +778,7 @@ namespace LuaPlayer
     {
         uint32 xp = Eluna::CHECKVAL<uint32>(L, 2);
 
-        Eluna::Push(L, player->GetXPRestBonus(xp));
+        // Eluna::Push(L, player->GetBonus);
         return 1;
     }
 
@@ -950,11 +789,7 @@ namespace LuaPlayer
      */
     int GetBattlegroundTypeId(lua_State* L, Player* player)
     {
-#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->GetBattlegroundTypeId());
-#else
-        Eluna::Push(L, player->GetBattleGroundTypeId());
-#endif
         return 1;
     }
 
@@ -965,11 +800,7 @@ namespace LuaPlayer
      */
     int GetBattlegroundId(lua_State* L, Player* player)
     {
-#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->GetBattlegroundId());
-#else
-        Eluna::Push(L, player->GetBattleGroundId());
-#endif
         return 1;
     }
 
@@ -1103,7 +934,7 @@ namespace LuaPlayer
      */
     int GetManaBonusFromIntellect(lua_State* L, Player* player)
     {
-        Eluna::Push(L, player->GetManaBonusFromIntellect());
+        Eluna::Push(L, player->GetMaxPower(Powers::POWER_MANA));
         return 1;
     }
 
@@ -1126,14 +957,9 @@ namespace LuaPlayer
      */
     int GetDifficulty(lua_State* L, Player* player)
     {
-#ifdef TBC
-        Eluna::Push(L, player->GetDifficulty());
-#elif defined(CLASSIC)
-        Eluna::Push(L, (Difficulty)0);
-#else
         bool isRaid = Eluna::CHECKVAL<bool>(L, 2, true);
-        Eluna::Push(L, player->GetDifficulty(isRaid));
-#endif
+
+        // Eluna::Push(L, player->get);
         return 1;
     }
 
@@ -1144,18 +970,8 @@ namespace LuaPlayer
      */
     int GetGuildRank(lua_State* L, Player* player) // TODO: Move to Guild Methods
     {
-        Eluna::Push(L, player->GetRank());
-        return 1;
-    }
 
-    /**
-     * Returns the [Player]s free talent point amount
-     *
-     * @return uint32 freeTalentPointAmt
-     */
-    int GetFreeTalentPoints(lua_State* L, Player* player)
-    {
-        Eluna::Push(L, player->GetFreeTalentPoints());
+        Eluna::Push(L, 0);
         return 1;
     }
 
