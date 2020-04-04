@@ -14,7 +14,7 @@
 #include "ElunaCreatureAI.h"
 #include "ElunaInstanceAI.h"
 
-#if defined(TRINITY_PLATFORM) && defined(TRINITY_PLATFORM_WINDOWS)
+#ifdef TRINITY_PLATFORM && defined(TRINITY_PLATFORM_WINDOWS)
 #if TRINITY_PLATFORM == TRINITY_PLATFORM_WINDOWS
 #define ELUNA_WINDOWS
 #endif
@@ -70,7 +70,7 @@ void Eluna::Initialize()
     LOCK_ELUNA;
     ASSERT(!IsInitialized());
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
     // For instance data the data column needs to be able to hold more than 255 characters (tinytext)
     // so we change it to TEXT automatically on startup
     CharacterDatabase.DirectExecute("ALTER TABLE `instance` CHANGE COLUMN `data` `data` TEXT NOT NULL");
@@ -363,7 +363,7 @@ void Eluna::GetScripts(std::string path)
             std::string fullpath = dir_iter->path().generic_string();
 
             // Check if file is hidden
-#ifdef ELUNA_WINDOWS
+#ifndef ELUNA_WINDOWS
             DWORD dwAttrib = GetFileAttributes(fullpath.c_str());
             if (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_HIDDEN))
                 continue;
@@ -409,7 +409,7 @@ void Eluna::GetScripts(std::string path)
         std::string fullpath = path + "/" + directory->d_name;
 
         // Check if file is hidden
-#ifdef ELUNA_WINDOWS
+#ifndef ELUNA_WINDOWS
         DWORD dwAttrib = GetFileAttributes(fullpath.c_str());
         if (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_HIDDEN))
             continue;
@@ -936,7 +936,11 @@ static void createCancelCallback(lua_State* L, uint64 bindingID, BindingMap<K>* 
 }
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
+#ifdef BFA
+int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
+#else
 int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, uint64 guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
+#endif
 {
     uint64 bindingID;
 
@@ -1037,7 +1041,11 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, uint64 guid, uint
                 }
                 else
                 {
+#ifdef BFA
+                    if (guid == ObjectGuid::Empty)
+#else
                     if (guid == 0)
+#endif
                     {
                         luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
                         luaL_error(L, "guid was 0!");

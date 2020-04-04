@@ -22,7 +22,7 @@ namespace LuaGameObject
     {
         uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, go->hasQuest(questId));
 #else
         Eluna::Push(L, go->HasQuest(questId));
@@ -145,7 +145,7 @@ namespace LuaGameObject
      */
     int GetLootRecipientGroup(lua_State* L, GameObject* go)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, go->GetLootRecipientGroup());
 #else
         Eluna::Push(L, go->GetGroupLootRecipient());
@@ -195,7 +195,7 @@ namespace LuaGameObject
             go->SetGoState(GO_STATE_READY);
         else if (state == 2)
         {
-#ifdef TRINITY
+#if defined TRINITY && !defined BFA
             go->SetGoState(GO_STATE_DESTROYED);
 #else
             go->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
@@ -259,23 +259,23 @@ namespace LuaGameObject
         bool deldb = Eluna::CHECKVAL<bool>(L, 2, false);
 
         // cs_gobject.cpp copy paste
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         ObjectGuid ownerGuid = go->GetOwnerGUID();
 #else
         ObjectGuid ownerGuid = go->GetOwnerGuid();
 #endif
-        if (ownerGuid)
-        {
-            Unit* owner = eObjectAccessor()GetUnit(*go, ownerGuid);
-            if (!owner || !ownerGuid.IsPlayer())
-                return 0;
+        if (!ownerGuid)
+            return 0;
 
-            owner->RemoveGameObject(go, false);
-        }
+        Unit* owner = eObjectAccessor()GetUnit(*go, ownerGuid);
+        if (!owner || !ownerGuid.IsPlayer())
+            return 0;
+
+        owner->RemoveGameObject(go, false);
 
         if (deldb)
         {
-#ifdef TRINITY
+#if defined TRINITY && !defined BFA
             GameObject::DeleteFromDB(go->GetSpawnId());
 #else
             go->DeleteFromDB();

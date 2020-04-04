@@ -658,7 +658,7 @@ namespace LuaWorldObject
     int GetAngle(lua_State* L, WorldObject* obj)
     {
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
-#if defined TRINITY && !AZEROTHCORE
+#ifdef TRINITY && !AZEROTHCORE
         if (target)
             Eluna::Push(L, obj->GetAbsoluteAngle(target));
         else
@@ -775,7 +775,7 @@ namespace LuaWorldObject
                 type = TEMPSUMMON_TIMED_DESPAWN;
                 break;
             case 4:
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
                 type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
 #else
                 type = TEMPSUMMON_TIMED_OOC_DESPAWN;

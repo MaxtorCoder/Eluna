@@ -9,7 +9,11 @@
 #include "Object.h"
 #include "Unit.h"
 #include "GameObject.h"
+#ifdef BFA
+#include "DB2Stores.h"
+#else
 #include "DBCStores.h"
+#endif
 
 uint32 ElunaUtil::GetCurrTime()
 {
@@ -90,9 +94,14 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
             {
                 if (i_obj_fact)
                 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY || defined AZEROTHCORE
+#ifdef BFA
+                    if ((i_obj_fact->IsHostileTo(target->GetFactionTemplateEntry())) != (i_hostile == 1))
+                        return false;
+#else
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
                         return false;
+#endif
 #else
                     if ((i_obj_fact->IsHostileTo(*target->getFactionTemplateEntry())) != (i_hostile == 1))
                         return false;

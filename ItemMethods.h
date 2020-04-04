@@ -176,7 +176,7 @@ namespace LuaItem
     int HasQuest(lua_State* L, Item* item)
     {
         uint32 quest = Eluna::CHECKVAL<uint32>(L, 2);
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, item->hasQuest(quest));
 #else
         Eluna::Push(L, item->HasQuest(quest));
@@ -195,7 +195,7 @@ namespace LuaItem
         return 1;
     }
 
-#if defined CLASSIC || defined(TBC) || defined(WOTLK)
+#ifdef CLASSIC || defined(TBC) || defined(WOTLK)
     /**
      * Returns 'true' if the [Item] is a weapon vellum, 'false' otherwise
      *
@@ -271,7 +271,7 @@ namespace LuaItem
 #ifndef CLASSIC
         if (int32 itemRandPropId = item->GetItemRandomPropertyId())
         {
-#if defined(CATA) || defined (MISTS)
+#ifdef(CATA) || defined (MISTS)
             char* suffix = NULL;
 #else
             char* const* suffix = NULL;
@@ -319,7 +319,7 @@ namespace LuaItem
 
     int GetOwnerGUID(lua_State* L, Item* item)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, item->GetOwnerGUID());
 #else
         Eluna::Push(L, item->GetOwnerGuid());
@@ -634,7 +634,7 @@ namespace LuaItem
     int SetOwner(lua_State* L, Item* item)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         item->SetOwnerGUID(player->GET_GUID());
 #else
         item->SetOwnerGuid(player->GET_GUID());
@@ -740,7 +740,7 @@ namespace LuaItem
      */
     int SaveToDB(lua_State* /*L*/, Item* item)
     {
-#if defined TRINITY
+#ifdef TRINITY
         CharacterDatabaseTransaction trans = CharacterDatabaseTransaction(nullptr);
         item->SaveToDB(trans);
 #elif defined AZEROTHCORE

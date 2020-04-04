@@ -55,7 +55,7 @@ namespace LuaPlayer
     int HasAchieved(lua_State* L, Player* player)
     {
         uint32 achievementId = Eluna::CHECKVAL<uint32>(L, 2);
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->HasAchieved(achievementId));
 #else
         Eluna::Push(L, player->GetAchievementMgr().HasAchievement(achievementId));
@@ -412,7 +412,7 @@ namespace LuaPlayer
      */
     int IsGM(lua_State* L, Player* player)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->IsGameMaster());
 #else
         Eluna::Push(L, player->isGameMaster());
@@ -643,7 +643,7 @@ namespace LuaPlayer
      */
     int InBattlegroundQueue(lua_State* L, Player* player)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->InBattlegroundQueue());
 #else
         Eluna::Push(L, player->InBattleGroundQueue());
@@ -671,7 +671,7 @@ namespace LuaPlayer
      */
     int InBattleground(lua_State* L, Player* player)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->InBattleground());
 #else
         Eluna::Push(L, player->InBattleGround());
@@ -797,7 +797,7 @@ namespace LuaPlayer
     }
 #endif
 
-#if defined(TBC) || defined (WOTLK)
+#ifdef(TBC) || defined (WOTLK)
     /**
      * Returns the [Player]s current amount of Arena Points
      *
@@ -820,7 +820,7 @@ namespace LuaPlayer
         return 1;
     }
 #endif
-#if defined(CLASSIC) || defined(TBC) || defined (WOTLK)
+#ifdef(CLASSIC) || defined(TBC) || defined (WOTLK)
     /**
      * Returns the [Player]s current shield block value
      *
@@ -865,7 +865,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
     /**
      * Returns the faction ID the [Player] is currently flagged as champion for
      *
@@ -957,7 +957,7 @@ namespace LuaPlayer
      */
     int GetBattlegroundTypeId(lua_State* L, Player* player)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->GetBattlegroundTypeId());
 #else
         Eluna::Push(L, player->GetBattleGroundTypeId());
@@ -972,7 +972,7 @@ namespace LuaPlayer
      */
     int GetBattlegroundId(lua_State* L, Player* player)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->GetBattlegroundId());
 #else
         Eluna::Push(L, player->GetBattleGroundId());
@@ -1200,7 +1200,7 @@ namespace LuaPlayer
      */
     int GetComboTarget(lua_State* L, Player* player)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->GetComboTarget());
 #else
         Eluna::Push(L, player->GetMap()->GetUnit(player->GetComboTargetGuid()));
@@ -1284,7 +1284,7 @@ namespace LuaPlayer
     {
         Quest* quest = Eluna::CHECKOBJ<Quest>(L, 2);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->GetQuestLevel(quest));
 #else
         Eluna::Push(L, player->GetQuestLevelForPlayer(quest));
@@ -1416,7 +1416,7 @@ namespace LuaPlayer
      */
     int GetSelection(lua_State* L, Player* player)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, player->GetSelectedUnit());
 #else
         Eluna::Push(L, player->GetMap()->GetUnit(player->GetSelectionGuid()));
@@ -1924,7 +1924,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#if defined(TBC) || defined(WOTLK)
+#ifdef(TBC) || defined(WOTLK)
     /**
      * Sets the [Player]s Arena Points to the amount specified
      *
@@ -2035,7 +2035,7 @@ namespace LuaPlayer
         uint32 areaId = Eluna::CHECKVAL<uint32>(L, 6);
 
         WorldLocation loc(mapId, x, y, z);
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         player->SetHomebind(loc, areaId);
 #else
         player->SetHomebindToLocation(loc, areaId);
@@ -2105,7 +2105,7 @@ namespace LuaPlayer
      */
     int ResetAchievements(lua_State* /*L*/, Player* player)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         player->ResetAchievements();
 #else
         player->GetAchievementMgr().Reset();
@@ -2133,7 +2133,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#if defined(TBC) || defined(WOTLK)
+#ifdef(TBC) || defined(WOTLK)
     /**
      * Adds or detracts from the [Player]s current Arena Points
      *
@@ -2362,7 +2362,7 @@ namespace LuaPlayer
     {
         Player* plr = Eluna::CHECKOBJ<Player>(L, 2);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         if (Guild* guild = player->GetGuild())
             guild->HandleInviteMember(player->GetSession(), plr->GetName());
 #else
@@ -2389,7 +2389,7 @@ namespace LuaPlayer
      */
     int RemoveFromBattlegroundRaid(lua_State* /*L*/, Player* player)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         player->RemoveFromBattlegroundOrBattlefieldRaid();
 #else
         player->RemoveFromBattleGroundRaid();
@@ -2816,7 +2816,7 @@ namespace LuaPlayer
         // Add quest items for quests that require items
         for (uint8 x = 0; x < QUEST_ITEM_OBJECTIVES_COUNT; ++x)
         {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
             uint32 id = quest->RequiredItemId[x];
             uint32 count = quest->RequiredItemCount[x];
 #else
@@ -2841,7 +2841,7 @@ namespace LuaPlayer
         // All creature/GO slain/cast (not required, but otherwise it will display "Creature slain 0/10")
         for (uint8 i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
         {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
             int32 creature = quest->RequiredNpcOrGo[i];
             uint32 creatureCount = quest->RequiredNpcOrGoCount[i];
 
@@ -2892,7 +2892,7 @@ namespace LuaPlayer
                     player->GetReputationMgr().SetReputation(factionEntry, repValue);
         }
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         // If the quest requires a SECOND reputation to complete
         if (uint32 repFaction = quest->GetRepObjectiveFaction2())
         {
@@ -2940,7 +2940,7 @@ namespace LuaPlayer
         if (!quest)
             return 0;
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         // check item starting quest (it can work incorrectly if added without item in inventory)
 #ifndef AZEROTHCORE
         ItemTemplateContainer const& itc = sObjectMgr->GetItemTemplateStore();
@@ -3011,7 +3011,7 @@ namespace LuaPlayer
                 // we ignore unequippable quest items in this case, its' still be equipped
                 player->TakeQuestSourceItem(logQuest, false);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
                 if (quest->HasFlag(QUEST_FLAGS_FLAGS_PVP))
                 {
                     player->pvpInfo.IsHostile = player->pvpInfo.IsInHostileArea || player->HasPvPForcingQuest();
@@ -3021,7 +3021,7 @@ namespace LuaPlayer
             }
         }
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         player->RemoveActiveQuest(entry, false);
         player->RemoveRewardedQuest(entry);
 #else
@@ -3357,7 +3357,7 @@ namespace LuaPlayer
         float y = Eluna::CHECKVAL<float>(L, 4);
         float z = Eluna::CHECKVAL<float>(L, 5);
         float o = Eluna::CHECKVAL<float>(L, 6);
-#if defined AZEROTHCORE
+#ifdef AZEROTHCORE
         if (player->IsInFlight())
         {
             player->GetMotionMaster()->MovementExpired();
@@ -3399,7 +3399,7 @@ namespace LuaPlayer
         uint32 itemId = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 itemCount = Eluna::CHECKVAL<uint32>(L, 3, 1);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         uint32 noSpaceForCount = 0;
         ItemPosCountVec dest;
         InventoryResult msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, itemId, itemCount, &noSpaceForCount);
@@ -3731,7 +3731,7 @@ namespace LuaPlayer
         bool _code = Eluna::CHECKVAL<bool>(L, 6, false);
         const char* _promptMsg = Eluna::CHECKVAL<const char*>(L, 7, "");
         uint32 _money = Eluna::CHECKVAL<uint32>(L, 8, 0);
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, _icon, msg, _sender, _intid, _promptMsg, _money, _code);
 #else
 #ifndef CLASSIC
@@ -3750,7 +3750,7 @@ namespace LuaPlayer
      */
     int GossipComplete(lua_State* /*L*/, Player* player)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         player->PlayerTalkClass->SendCloseGossip();
 #else
         player->PlayerTalkClass->CloseGossip();
@@ -3945,7 +3945,7 @@ namespace LuaPlayer
 
         if (success)
         {
-#if defined(CLASSIC) || defined(TBC)
+#ifdef(CLASSIC) || defined(TBC)
             WorldPacket data(SMSG_GROUP_INVITE, 10);                // guess size
             data << player->GetName();
 #ifdef CMANGOS
@@ -4002,7 +4002,7 @@ namespace LuaPlayer
         if (!group->IsCreated())
         {
             group->RemoveInvite(player);
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
             group->Create(player);
             sGroupMgr->AddGroup(group);
 #else
@@ -4012,7 +4012,7 @@ namespace LuaPlayer
 #endif
         }
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         if (!group->AddMember(invited))
             return 0;
         group->BroadcastGroupUpdate();

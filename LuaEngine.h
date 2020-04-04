@@ -28,7 +28,7 @@ extern "C"
 #include "lua.h"
 };
 
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
 struct ItemTemplate;
 typedef BattlegroundTypeId BattleGroundTypeId;
 #else
@@ -48,7 +48,7 @@ typedef AreaTrigger AreaTriggerEntry;
 #endif
 class AuctionHouseObject;
 struct AuctionEntry;
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
 class Battleground;
 typedef Battleground BattleGround;
 #endif
@@ -57,12 +57,12 @@ class Corpse;
 class Creature;
 class CreatureAI;
 class GameObject;
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
 class GameObjectAI;
 #endif
 class Guild;
 class Group;
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
 class InstanceScript;
 typedef InstanceScript InstanceData;
 #else
@@ -75,7 +75,7 @@ class Player;
 class Quest;
 class Spell;
 class SpellCastTargets;
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
 class TempSummon;
 #else
 class TemporarySummon;
@@ -87,7 +87,7 @@ class Weather;
 class WorldPacket;
 #ifndef CLASSIC
 #ifndef TBC
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
 class Vehicle;
 #else
 class VehicleInfo;
@@ -323,7 +323,11 @@ public:
     bool IsEnabled() const { return enabled && IsInitialized(); }
     bool HasLuaState() const { return L != NULL; }
     uint64 GetCallstackId() const { return callstackid; }
+#ifdef BFA
+    int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+#else
     int Register(lua_State* L, uint8 reg, uint32 entry, uint64 guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+#endif
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);

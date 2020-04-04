@@ -138,7 +138,7 @@ namespace LuaGroup
         if (player->GetGroupInvite())
             player->UninviteFromGroup();
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         bool success = group->AddMember(player);
         if (success)
             group->BroadcastGroupUpdate();
@@ -175,7 +175,7 @@ namespace LuaGroup
 
         for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
         {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
             Player* member = itr->GetSource();
 #else
             Player* member = itr->getSource();
@@ -199,7 +199,7 @@ namespace LuaGroup
      */
     int GetLeaderGUID(lua_State* L, Group* group)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, group->GetLeaderGUID());
 #else
         Eluna::Push(L, group->GetLeaderGuid());
@@ -231,7 +231,7 @@ namespace LuaGroup
     int GetMemberGUID(lua_State* L, Group* group)
     {
         const char* name = Eluna::CHECKVAL<const char*>(L, 2);
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, group->GetMemberGUID(name));
 #else
         Eluna::Push(L, group->GetMemberGuid(name));
@@ -319,7 +319,7 @@ namespace LuaGroup
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
         uint32 method = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, group->RemoveMember(ObjectGuid(guid), (RemoveMethod)method));
 #else
         Eluna::Push(L, group->RemoveMember(ObjectGuid(guid), method));

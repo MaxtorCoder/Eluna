@@ -7,7 +7,7 @@
 #ifndef QUERYMETHODS_H
 #define QUERYMETHODS_H
 
-#if defined TRINITY || defined AZEROTHCORE
+#ifdef TRINITY || defined AZEROTHCORE
 #define RESULT  (*result)
 #else
 #define RESULT  result
@@ -45,7 +45,7 @@ namespace LuaQuery
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, RESULT->Fetch()[col].IsNull());
 #else
         Eluna::Push(L, RESULT->Fetch()[col].IsNULL());
@@ -297,7 +297,7 @@ namespace LuaQuery
 
         for (uint32 i = 0; i < col; ++i)
         {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
             Eluna::Push(L, RESULT->GetFieldName(i));
 
             const char* str = row[i].GetCString();
@@ -333,8 +333,8 @@ namespace LuaQuery
                     default:
                         Eluna::Push(L, str);
                         break;
-        }
-    }
+                }
+            }
 #else
             Eluna::Push(L, names[i]);
 

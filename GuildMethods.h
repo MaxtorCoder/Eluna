@@ -25,7 +25,7 @@ namespace LuaGuild
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
-#if defined(MANGOS)
+#ifdef(MANGOS)
         eObjectAccessor()DoForAllPlayers([&](Player* player)
         {
             if (player->IsInWorld() && player->GetGuildId() == guild->GetId())
@@ -68,7 +68,7 @@ namespace LuaGuild
      */
     int GetMemberCount(lua_State* L, Guild* guild)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, guild->GetMemberCount());
 #else
         Eluna::Push(L, guild->GetMemberSize());
@@ -83,7 +83,7 @@ namespace LuaGuild
      */
     int GetLeader(lua_State* L, Guild* guild)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, eObjectAccessor()FindPlayer(guild->GetLeaderGUID()));
 #else
         Eluna::Push(L, eObjectAccessor()FindPlayer(guild->GetLeaderGuid()));
@@ -98,7 +98,7 @@ namespace LuaGuild
      */
     int GetLeaderGUID(lua_State* L, Guild* guild)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, guild->GetLeaderGUID());
 #else
         Eluna::Push(L, guild->GetLeaderGuid());
@@ -146,7 +146,7 @@ namespace LuaGuild
      */
     int GetInfo(lua_State* L, Guild* guild)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, guild->GetInfo());
 #else
         Eluna::Push(L, guild->GetGINFO());
@@ -154,7 +154,7 @@ namespace LuaGuild
         return 1;
     }
 
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
+#ifdef(CLASSIC) || defined(TBC) || defined(WOTLK)
     /**
      * Sets the leader of this [Guild]
      *
@@ -164,7 +164,7 @@ namespace LuaGuild
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         guild->HandleSetLeader(player->GetSession(), player->GetName());
 #else
         guild->SetLeader(player->GET_GUID());
@@ -184,7 +184,7 @@ namespace LuaGuild
     {
         uint8 tabId = Eluna::CHECKVAL<uint8>(L, 2);
         const char* text = Eluna::CHECKVAL<const char*>(L, 3);
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         guild->SetBankTabText(tabId, text);
 #else
         guild->SetGuildBankTabText(tabId, text);
@@ -273,7 +273,7 @@ namespace LuaGuild
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         bool isDisbanding = Eluna::CHECKVAL<bool>(L, 3, false);
 
-#if defined TRINITY
+#ifdef TRINITY
         CharacterDatabaseTransaction trans(nullptr);
         guild->DeleteMember(trans, player->GET_GUID(), isDisbanding);
 #elif defined AZEROTHCORE

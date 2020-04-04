@@ -39,10 +39,10 @@ namespace LuaAura
      */
     int GetCasterGUID(lua_State* L, Aura* aura)
     {
-#if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, aura->GetCasterGUID());
+#ifdef TRINITY || AZEROTHCORE
+        Eluna::Push(L, &aura->GetCasterGUID());
 #else
-        Eluna::Push(L, aura->GetCasterGuid());
+        Eluna::Push(L, &aura->GetCasterGuid());
 #endif
         return 1;
     }
@@ -54,11 +54,7 @@ namespace LuaAura
      */
     int GetCasterLevel(lua_State* L, Aura* aura)
     {
-#ifdef TRINITY
-        Eluna::Push(L, aura->GetCaster()->GetLevel());
-#else
         Eluna::Push(L, aura->GetCaster()->getLevel());
-#endif
         return 1;
     }
 

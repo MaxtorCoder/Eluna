@@ -33,7 +33,7 @@ typedef QueryResult ElunaQuery;
 #define GET_GUID                GetGUID
 
 #define HIGHGUID_PLAYER         HighGuid::Player
-#define HIGHGUID_UNIT           HighGuid::Unit
+#define HIGHGUID_UNIT           HighGuid::Creature
 #define HIGHGUID_ITEM           HighGuid::Item
 #define HIGHGUID_GAMEOBJECT     HighGuid::GameObject
 #define HIGHGUID_PET            HighGuid::Pet
@@ -63,7 +63,7 @@ typedef QueryNamedResult ElunaQuery;
 #define GetTemplate             GetProto
 #endif
 
-#if defined(TRINITY) || defined(MANGOS)
+#ifdef TRINITY || defined(MANGOS)
 #ifndef MAKE_NEW_GUID
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
 #endif

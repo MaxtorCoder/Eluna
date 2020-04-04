@@ -14,7 +14,11 @@
 #include "CellImpl.h"
 #include "Chat.h"
 #include "Channel.h"
+#ifdef BFA
+#include "DB2Stores.h"
+#else
 #include "DBCStores.h"
+#endif
 #include "GameEventMgr.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"
@@ -39,14 +43,14 @@
 #include "WorldPacket.h"
 #include "WorldSession.h"
 
-#if defined TRINITY
+#ifdef TRINITY
 #include "GitRevision.h"
 #include "SpellHistory.h"
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #endif
 
-#if defined TRINITY || defined AZEROTHCORE
+#ifdef TRINITY || defined AZEROTHCORE
 #include "Config.h"
 #include "GameEventMgr.h"
 #include "GroupMgr.h"
@@ -78,7 +82,8 @@
 #endif
 
 #ifndef CLASSIC
-typedef Opcodes                 OpcodesList;
+typedef OpcodeClient            OpcodeClientList;
+typedef OpcodeServer            OpcodeServerList;
 #endif
 
 /*
@@ -144,7 +149,7 @@ typedef Opcodes                 OpcodesList;
 #define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
 #define TEAM_NEUTRAL            TEAM_INDEX_NEUTRAL
 
-#if defined(TBC) || defined(WOTLK) || defined(CATA)
+#ifdef(TBC) || defined(WOTLK) || defined(CATA)
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
 #endif
 
@@ -152,7 +157,7 @@ typedef Opcodes                 OpcodesList;
 #define SPELL_AURA_MOD_KILL_XP_PCT  SPELL_AURA_MOD_XP_PCT
 #endif
 
-#if defined(CATA) || defined(MISTS) || (defined(WOTLK) && !defined(MANGOS))
+#ifdef(CATA) || defined(MISTS) || (defined(WOTLK) && !defined(MANGOS))
 #define UNIT_BYTE2_FLAG_SANCTUARY   UNIT_BYTE2_FLAG_SUPPORTABLE
 #endif
 

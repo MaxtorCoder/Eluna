@@ -83,6 +83,8 @@ namespace LuaGlobalFunctions
         Eluna::Push(L, 2);
 #elif defined(CATA)
         Eluna::Push(L, 3);
+#elif defined(BFA)
+        Eluna::Push(L, 7);
 #endif
         return 1;
     }
@@ -110,7 +112,11 @@ namespace LuaGlobalFunctions
     int GetPlayerByGUID(lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+#ifdef BFA
+        Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid::Create<HIGHGUID_PLAYER>(guid)));
+#else
         Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid(guid)));
+#endif
         return 1;
     }
 
@@ -167,7 +173,7 @@ namespace LuaGlobalFunctions
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
-#if defined(MANGOS)
+#ifdef MANGOS
         eObjectAccessor()DoForAllPlayers([&](Player* player){
             if(player->IsInWorld())
             {
@@ -194,7 +200,7 @@ namespace LuaGlobalFunctions
                 {
                     if (!player->IsInWorld())
                         continue;
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
                     if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
 #else
                     if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
@@ -249,8 +255,11 @@ namespace LuaGlobalFunctions
     int GetGuildByLeaderGUID(lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-
+#ifdef BFA
+        Eluna::Push(L, eGuildMgr->GetGuildByLeader(ObjectGuid::Create<HIGHGUID_PLAYER>(guid)));
+#else
         Eluna::Push(L, eGuildMgr->GetGuildByLeader(ObjectGuid(guid)));
+#endif
         return 1;
     }
 
@@ -278,7 +287,11 @@ namespace LuaGlobalFunctions
     int GetPlayerGUID(lua_State* L)
     {
         uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
+#ifdef BFA
+        Eluna::Push(L, &ObjectGuid::Create<HIGHGUID_PLAYER>(lowguid));
+#else
         Eluna::Push(L, MAKE_NEW_GUID(lowguid, 0, HIGHGUID_PLAYER));
+#endif
         return 1;
     }
 
@@ -294,7 +307,11 @@ namespace LuaGlobalFunctions
     int GetItemGUID(lua_State* L)
     {
         uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
+#ifdef BFA
+        Eluna::Push(L, &ObjectGuid::Create<HIGHGUID_ITEM>(lowguid));
+#else
         Eluna::Push(L, MAKE_NEW_GUID(lowguid, 0, HIGHGUID_ITEM));
+#endif
         return 1;
     }
 
@@ -307,13 +324,19 @@ namespace LuaGlobalFunctions
      *
      * @param uint32 lowguid : low GUID of the [GameObject]
      * @param uint32 entry : entry ID of the [GameObject]
+     * @param uint32 mapId : map ID of the [GameObject]             <<< BFA ONLY
      * @return uint64 guid
      */
     int GetObjectGUID(lua_State* L)
     {
         uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+#ifdef BFA
+        uint32 mapId = Eluna::CHECKVAL<uint32>(L, 3);
+        Eluna::Push(L, &ObjectGuid::Create<HIGHGUID_GAMEOBJECT>(mapId, entry, lowguid));
+#else
         Eluna::Push(L, MAKE_NEW_GUID(lowguid, entry, HIGHGUID_GAMEOBJECT));
+#endif
         return 1;
     }
 
@@ -326,13 +349,19 @@ namespace LuaGlobalFunctions
      *
      * @param uint32 lowguid : low GUID of the [Creature]
      * @param uint32 entry : entry ID of the [Creature]
+     * @param uint32 mapId : map ID of the [Creature]             <<< BFA ONLY
      * @return uint64 guid
      */
     int GetUnitGUID(lua_State* L)
     {
         uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+#ifdef BFA
+        uint32 mapId = Eluna::CHECKVAL<uint32>(L, 3);
+        Eluna::Push(L, &ObjectGuid::Create<HIGHGUID_UNIT>(mapId, entry, lowguid));
+#else
         Eluna::Push(L, MAKE_NEW_GUID(lowguid, entry, HIGHGUID_UNIT));
+#endif
         return 1;
     }
 
@@ -358,8 +387,11 @@ namespace LuaGlobalFunctions
     int GetGUIDLow(lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-
+#ifdef BFA
+        
+#else
         Eluna::Push(L, GUID_LOPART(guid));
+#endif
         return 1;
     }
 
@@ -394,12 +426,22 @@ namespace LuaGlobalFunctions
         if (!temp)
             return luaL_argerror(L, 1, "valid ItemEntry expected");
 
+#ifdef BFA
+        std::string name = temp->GetName(static_cast<LocaleConstant>(locale));
+#else
         std::string name = temp->Name1;
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(entry))
             ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
+#endif
 
         std::ostringstream oss;
-        oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
+        oss << "|c" << std::hex <<
+#ifdef BFA
+            ItemQualityColors[temp->GetQuality()]
+#else
+            ItemQualityColors[temp->Quality]
+#endif
+            << std::dec <<
             "|Hitem:" << entry << ":0:" <<
 #ifndef CLASSIC
             "0:0:0:0:" <<
@@ -423,7 +465,7 @@ namespace LuaGlobalFunctions
     int GetGUIDType(lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-        Eluna::Push(L, static_cast<int>(GUID_HIPART(guid)));
+        //Eluna::Push(L, static_cast<int>(GUID_HIPART(guid)));
         return 1;
     }
 
@@ -438,7 +480,7 @@ namespace LuaGlobalFunctions
     int GetGUIDEntry(lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-        Eluna::Push(L, GUID_ENPART(guid));
+        //Eluna::Push(L, GUID_ENPART(guid));
         return 1;
     }
 
@@ -469,7 +511,7 @@ namespace LuaGlobalFunctions
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         AreaTableEntry const* areaEntry = sAreaTableStore.LookupEntry(areaOrZoneId);
 #else
         AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(areaOrZoneId);
@@ -477,7 +519,11 @@ namespace LuaGlobalFunctions
         if (!areaEntry)
             return luaL_argerror(L, 1, "valid Area or Zone ID expected");
 
+#ifdef BFA
+        Eluna::Push(L, areaEntry->AreaName->Str[locale]);
+#else
         Eluna::Push(L, areaEntry->area_name[locale]);
+#endif
         return 1;
     }
 
@@ -515,7 +561,11 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
+#ifdef BFA
+            return Eluna::GetEluna(L)->Register(L, regtype, id, ObjectGuid::Empty, 0, ev, functionRef, shots);
+#else
             return Eluna::GetEluna(L)->Register(L, regtype, id, 0, 0, ev, functionRef, shots);
+#endif
         else
             luaL_argerror(L, 3, "unable to make a ref to function");
         return 0;
@@ -530,7 +580,11 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 2);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
+#ifdef BFA
+            return Eluna::GetEluna(L)->Register(L, regtype, 0, ObjectGuid::Empty, 0, ev, functionRef, shots);
+#else
             return Eluna::GetEluna(L)->Register(L, regtype, 0, 0, 0, ev, functionRef, shots);
+#endif
         else
             luaL_argerror(L, 2, "unable to make a ref to function");
         return 0;
@@ -1221,7 +1275,7 @@ namespace LuaGlobalFunctions
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         ElunaQuery result = WorldDatabase.Query(query);
         if (result)
             Eluna::Push(L, new ElunaQuery(result));
@@ -1272,7 +1326,7 @@ namespace LuaGlobalFunctions
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         QueryResult result = CharacterDatabase.Query(query);
         if (result)
             Eluna::Push(L, new QueryResult(result));
@@ -1323,7 +1377,7 @@ namespace LuaGlobalFunctions
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         QueryResult result = LoginDatabase.Query(query);
         if (result)
             Eluna::Push(L, new QueryResult(result));
@@ -1848,7 +1902,7 @@ namespace LuaGlobalFunctions
         uint32 incrtime = Eluna::CHECKVAL<uint32>(L, 4);
         uint32 extendedcost = Eluna::CHECKVAL<uint32>(L, 5);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
 #ifdef CATA
         if (!eObjectMgr->IsVendorItemValid(entry, item, maxcount, incrtime, extendedcost, 1))
             return 0;
@@ -1964,7 +2018,7 @@ namespace LuaGlobalFunctions
         switch (banMode)
         {
             case BAN_ACCOUNT:
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
                 if (!Utf8ToUpperOnlyLatin(nameOrIP))
                     return luaL_argerror(L, 2, "invalid account name");
 #else
@@ -2020,7 +2074,7 @@ namespace LuaGlobalFunctions
         case BanReturn::BAN_LONGER_EXISTS:
             Eluna::Push(L, 3);
             break;
-#elif TRINITY
+#elif defined(TRINITY)
         case BanReturn::BAN_EXISTS:
             Eluna::Push(L, 3);
             break;
@@ -2082,7 +2136,7 @@ namespace LuaGlobalFunctions
         MailSender sender(MAIL_NORMAL, senderGUIDLow, (MailStationery)stationary);
         MailDraft draft(subject, text);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         if (cod)
             draft.AddCOD(cod);
         if (money)
@@ -2094,7 +2148,7 @@ namespace LuaGlobalFunctions
             draft.SetMoney(money);
 #endif
 
-#if defined TRINITY
+#ifdef TRINITY
         CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
 #elif defined AZEROTHCORE
         SQLTransaction trans = CharacterDatabase.BeginTransaction();
@@ -2105,7 +2159,7 @@ namespace LuaGlobalFunctions
             uint32 entry = Eluna::CHECKVAL<uint32>(L, ++i);
             uint32 amount = Eluna::CHECKVAL<uint32>(L, ++i);
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
             ItemTemplate const* item_proto = eObjectMgr->GetItemTemplate(entry);
 #else
             ItemTemplate const* item_proto = ObjectMgr::GetItemPrototype(entry);
@@ -2122,7 +2176,7 @@ namespace LuaGlobalFunctions
             }
             if (Item* item = Item::CreateItem(entry, amount))
             {
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
                 item->SaveToDB(trans);
 #else
                 item->SaveToDB();
@@ -2133,7 +2187,7 @@ namespace LuaGlobalFunctions
         }
 
         Player* receiverPlayer = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER));
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         draft.SendMailTo(trans, MailReceiver(receiverPlayer, receiverGUIDLow), sender, MAIL_CHECK_MASK_NONE, delay);
         CharacterDatabase.CommitTransaction(trans);
 #else

@@ -449,7 +449,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetGuild", &LuaPlayer::GetGuild },
     { "GetAccountId", &LuaPlayer::GetAccountId },
     { "GetAccountName", &LuaPlayer::GetAccountName },
-#if defined (TBC) || defined (WOTLK)
+#ifdef (TBC) || defined (WOTLK)
     { "GetArenaPoints", &LuaPlayer::GetArenaPoints },
     { "GetHonorPoints", &LuaPlayer::GetHonorPoints },
 #endif
@@ -501,7 +501,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetNextRandomRaidMember", &LuaPlayer::GetNextRandomRaidMember },
     { "GetOriginalGroup", &LuaPlayer::GetOriginalGroup },
     { "GetOriginalSubGroup", &LuaPlayer::GetOriginalSubGroup },
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
     { "GetChampioningFaction", &LuaPlayer::GetChampioningFaction },
 #endif
     { "GetLatency", &LuaPlayer::GetLatency },
@@ -511,7 +511,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetCorpse", &LuaPlayer::GetCorpse },
     { "GetGossipTextId", &LuaPlayer::GetGossipTextId },
     { "GetQuestRewardStatus", &LuaPlayer::GetQuestRewardStatus },
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
+#ifdef(CLASSIC) || defined(TBC) || defined(WOTLK)
     { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
 #endif
 #ifdef CLASSIC
@@ -531,7 +531,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "UnsetKnownTitle", &LuaPlayer::UnsetKnownTitle },
 #endif
     { "SetBindPoint", &LuaPlayer::SetBindPoint },
-#if defined(TBC) || defined(WOTLK)
+#ifdef(TBC) || defined(WOTLK)
     { "SetArenaPoints", &LuaPlayer::SetArenaPoints },
     { "SetHonorPoints", &LuaPlayer::SetHonorPoints },
 #endif
@@ -703,7 +703,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "DurabilityPointLossForEquipSlot", &LuaPlayer::DurabilityPointLossForEquipSlot },
     { "DurabilityRepairAll", &LuaPlayer::DurabilityRepairAll },
     { "DurabilityRepair", &LuaPlayer::DurabilityRepair },
-#if defined(TBC) || defined(WOTLK)
+#ifdef(TBC) || defined(WOTLK)
     { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
     { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
 #endif
@@ -771,14 +771,14 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },
     { "GetWanderRadius", &LuaCreature::GetWanderRadius },
     { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
     { "GetWaypointPath", &LuaCreature::GetWaypointPath },
     { "GetLootMode", &LuaCreature::GetLootMode },
 #endif
     { "GetLootRecipient", &LuaCreature::GetLootRecipient },
     { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },
     { "GetNPCFlags", &LuaCreature::GetNPCFlags },
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
+#ifdef(CLASSIC) || defined(TBC) || defined(WOTLK)
     { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
 #endif
     { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
@@ -795,7 +795,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "SetWanderRadius", &LuaCreature::SetWanderRadius },
     { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },
     { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
     { "SetLootMode", &LuaCreature::SetLootMode },
 #endif
     { "SetNPCFlags", &LuaCreature::SetNPCFlags },
@@ -808,7 +808,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "IsWorldBoss", &LuaCreature::IsWorldBoss },
     { "IsRacialLeader", &LuaCreature::IsRacialLeader },
     { "IsCivilian", &LuaCreature::IsCivilian },
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
     { "IsTrigger", &LuaCreature::IsTrigger },
 #endif
     { "IsGuard", &LuaCreature::IsGuard },
@@ -818,7 +818,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "CanWalk", &LuaCreature::CanWalk },
     { "CanSwim", &LuaCreature::CanSwim },
     { "CanAggro", &LuaCreature::CanAggro },
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
     { "CanStartAttack", &LuaCreature::CanStartAttack },
 #endif
     { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },
@@ -828,7 +828,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },
     { "CanCompleteQuest", &LuaCreature::CanCompleteQuest },
     { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
     { "IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward },
     { "HasLootMode", &LuaCreature::HasLootMode },
 #endif
@@ -845,7 +845,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },
     { "Respawn", &LuaCreature::Respawn },
     { "AttackStart", &LuaCreature::AttackStart },
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
     { "AddLootMode", &LuaCreature::AddLootMode },
     { "ResetLootMode", &LuaCreature::ResetLootMode },
     { "RemoveLootMode", &LuaCreature::RemoveLootMode },
@@ -951,7 +951,7 @@ ElunaRegister<Item> ItemMethods[] =
     { "IsEquipped", &LuaItem::IsEquipped },
     { "HasQuest", &LuaItem::HasQuest },
     { "IsPotion", &LuaItem::IsPotion },
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
+#ifdef(CLASSIC) || defined(TBC) || defined(WOTLK)
     { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
     { "IsArmorVellum", &LuaItem::IsArmorVellum },
 #endif
@@ -1092,7 +1092,7 @@ ElunaRegister<Guild> GuildMethods[] =
     { "SetBankTabText", &LuaGuild::SetBankTabText },
 #endif
     { "SetMemberRank", &LuaGuild::SetMemberRank },
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
+#ifdef(CLASSIC) || defined(TBC) || defined(WOTLK)
     { "SetLeader", &LuaGuild::SetLeader },
 #endif
 
