@@ -12,7 +12,6 @@
  */
 namespace LuaPlayer
 {
-#if (!defined(TBC) && !defined(CLASSIC))
     /**
      * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise.
      *
@@ -34,14 +33,12 @@ namespace LuaPlayer
     int HasTalent(lua_State* L, Player* player)
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
-#ifdef MANGOS
-        uint8 maxSpecs = MAX_TALENT_SPEC_COUNT;
-#else
         uint8 maxSpecs = MAX_TALENT_SPECS;
-#endif
         uint8 spec = Eluna::CHECKVAL<uint8>(L, 3);
+
         if (spec >= maxSpecs)
             return 1;
+
         Eluna::Push(L, player->HasTalent(spellId, spec));
         return 1;
     }
@@ -55,14 +52,10 @@ namespace LuaPlayer
     int HasAchieved(lua_State* L, Player* player)
     {
         uint32 achievementId = Eluna::CHECKVAL<uint32>(L, 2);
-#ifdef TRINITY || AZEROTHCORE
+
         Eluna::Push(L, player->HasAchieved(achievementId));
-#else
-        Eluna::Push(L, player->GetAchievementMgr().HasAchievement(achievementId));
-#endif
         return 1;
     }
-#endif
 
     /**
      * Returns 'true' if the [Player] has an active [Quest] by specific ID, 'false' otherwise.

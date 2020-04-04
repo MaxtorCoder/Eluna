@@ -17,20 +17,12 @@
 
 uint32 ElunaUtil::GetCurrTime()
 {
-#if !defined TRINITY && !AZEROTHCORE
-    return WorldTimer::getMSTime();
-#else
     return getMSTime();
-#endif
 }
 
 uint32 ElunaUtil::GetTimeDiff(uint32 oldMSTime)
 {
-#if !defined TRINITY && !AZEROTHCORE
-    return WorldTimer::getMSTimeDiff(oldMSTime, GetCurrTime());
-#else
     return GetMSTimeDiffToNow(oldMSTime);
-#endif
 }
 
 ElunaUtil::ObjectGUIDCheck::ObjectGUIDCheck(ObjectGuid guid) : _guid(guid)
@@ -81,31 +73,17 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
             target = go->GetOwner();
     if (target)
     {
-#ifdef CMANGOS
-        if (i_dead && (i_dead == 1) != target->isAlive())
-            return false;
-#else
         if (i_dead && (i_dead == 1) != target->IsAlive())
             return false;
-#endif
+
         if (i_hostile)
         {
             if (!i_obj_unit)
             {
                 if (i_obj_fact)
                 {
-#if defined TRINITY || defined AZEROTHCORE
-#ifdef BFA
                     if ((i_obj_fact->IsHostileTo(target->GetFactionTemplateEntry())) != (i_hostile == 1))
                         return false;
-#else
-                    if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
-                        return false;
-#endif
-#else
-                    if ((i_obj_fact->IsHostileTo(*target->getFactionTemplateEntry())) != (i_hostile == 1))
-                        return false;
-#endif
                 }
                 else if (i_hostile == 1)
                     return false;

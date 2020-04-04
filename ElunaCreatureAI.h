@@ -9,12 +9,7 @@
 
 #include "LuaEngine.h"
 
-#ifdef TRINITY || AZEROTHCORE
 struct ScriptedAI;
-#else
-class AggressorAI;
-typedef AggressorAI ScriptedAI;
-#endif
 
 struct ElunaCreatureAI : ScriptedAI
 {
@@ -22,9 +17,6 @@ struct ElunaCreatureAI : ScriptedAI
     bool justSpawned;
     // used to delay movementinform hook (WP hook)
     std::vector< std::pair<uint32, uint32> > movepoints;
-#ifdef MANGOS || defined CMANGOS
-#define me  m_creature
-#endif
 
     ElunaCreatureAI(Creature* creature) : ScriptedAI(creature), justSpawned(true)
     {
@@ -32,20 +24,12 @@ struct ElunaCreatureAI : ScriptedAI
     ~ElunaCreatureAI() { }
 
     //Called at World update tick
-#ifndef TRINITY
-    void UpdateAI(const uint32 diff) override
-#else
     void UpdateAI(uint32 diff) override
-#endif
     {
         if (justSpawned)
         {
             justSpawned = false;
-#ifdef TRINITY
             // JustAppeared();
-#else
-            JustRespawned();
-#endif
         }
 
         if (!movepoints.empty())
@@ -60,22 +44,11 @@ struct ElunaCreatureAI : ScriptedAI
 
         if (!sEluna->UpdateAI(me, diff))
         {
-#ifdef TRINITY || AZEROTHCORE
-#ifdef BFA
             if (!me->HasUnitFlag(UNIT_FLAG_IMMUNE_TO_NPC))
                 ScriptedAI::UpdateAI(diff);
-#else
-            if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
-                ScriptedAI::UpdateAI(diff);
-#endif
-#else
-            if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE))
-                ScriptedAI::UpdateAI(diff);
-#endif
         }
     }
 
-#ifdef TRINITY
     // Called for reaction when initially engaged - this will always happen _after_ JustEnteredCombat
     // Called at creature aggro either by MoveInLOS or Attack Start
 
@@ -84,30 +57,13 @@ struct ElunaCreatureAI : ScriptedAI
     //     if (!sEluna->EnterCombat(me, target))
     //         ScriptedAI::JustEngagedWith(target);
     // }
-#else
-    //Called for reaction at enter to combat if not in combat yet (enemy can be NULL)
-    //Called at creature aggro either by MoveInLOS or Attack Start
-    void EnterCombat(Unit* target) override
-    {
-        if (!sEluna->EnterCombat(me, target))
-            ScriptedAI::EnterCombat(target);
-    }
-#endif
 
     // Called at any Damage from any attacker (before damage apply)
-#if AZEROTHCORE
-    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
-#else
     void DamageTaken(Unit* attacker, uint32& damage) override
-#endif
     {
         if (!sEluna->DamageTaken(me, attacker, damage))
         {
-#if AZEROTHCORE
-            ScriptedAI::DamageTaken(attacker, damage, damagetype, damageSchoolMask);
-#else
             ScriptedAI::DamageTaken(attacker, damage);
-#endif
         }
     }
 
@@ -154,37 +110,19 @@ struct ElunaCreatureAI : ScriptedAI
             ScriptedAI::AttackStart(target);
     }
 
-#ifdef TRINITY
     // Called for reaction at stopping attack at no attackers or targets
     void EnterEvadeMode(EvadeReason /*why*/) override
     {
         if (!sEluna->EnterEvadeMode(me))
             ScriptedAI::EnterEvadeMode();
     }
-#else
-    // Called for reaction at stopping attack at no attackers or targets
-    void EnterEvadeMode() override
-    {
-        if (!sEluna->EnterEvadeMode(me))
-            ScriptedAI::EnterEvadeMode();
-    }
-#endif
 
-#ifdef TRINITY
     // Called when creature appears in the world (spawn, respawn, grid load etc...)
     // void JustAppeared() override
     // {
     //     if (!sEluna->JustRespawned(me))
     //         ScriptedAI::JustAppeared();
     // }
-#else
-    // Called when creature is spawned or respawned (for reseting variables)
-    void JustRespawned() override
-    {
-        if (!sEluna->JustRespawned(me))
-            ScriptedAI::JustRespawned();
-    }
-#endif
 
     // Called at reaching home after evade
     void JustReachedHome() override
@@ -207,14 +145,6 @@ struct ElunaCreatureAI : ScriptedAI
             ScriptedAI::CorpseRemoved(respawnDelay);
     }
 
-#if !defined TRINITY && !AZEROTHCORE
-    // Enables use of MoveInLineOfSight
-    bool IsVisible(Unit* who) const override
-    {
-        return true;
-    }
-#endif
-
     void MoveInLineOfSight(Unit* who) override
     {
         if (!sEluna->MoveInLineOfSight(me, who))
@@ -235,23 +165,12 @@ struct ElunaCreatureAI : ScriptedAI
             ScriptedAI::SpellHitTarget(target, spell);
     }
 
-#ifdef TRINITY || AZEROTHCORE
-
-#ifdef TRINITY
     // Called when the creature is summoned successfully by other creature
     // void IsSummonedBy(WorldObject* summoner) override
     // {
     //     if (!summoner->ToUnit() || !sEluna->OnSummoned(me, summoner->ToUnit()))
     //         ScriptedAI::IsSummonedBy(summoner);
     // }
-#else
-    // Called when the creature is summoned successfully by other creature
-    void IsSummonedBy(Unit* summoner) override
-    {
-        if (!sEluna->OnSummoned(me, summoner))
-            ScriptedAI::IsSummonedBy(summoner);
-    }
-#endif
 
     void SummonedCreatureDies(Creature* summon, Unit* killer) override
     {
@@ -272,11 +191,6 @@ struct ElunaCreatureAI : ScriptedAI
         if (!sEluna->OwnerAttacked(me, target))
             ScriptedAI::OwnerAttacked(target);
     }
-#endif
-
-#ifdef MANGOS || defined CMANGOS
-#undef me
-#endif
 };
 
 #endif

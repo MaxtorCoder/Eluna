@@ -14,18 +14,9 @@
 #include "Common.h"
 #include "SharedDefines.h"
 #include "ObjectGuid.h"
-#ifdef TRINITY
 #include "QueryResult.h"
 #include "Log.h"
-#ifdef CATA
-#include "Object.h"
-#endif
-#else
-#include "Database/QueryResult.h"
-#include "Log.h"
-#endif
 
-#ifdef TRINITY
 typedef QueryResult ElunaQuery;
 #define ELUNA_LOG_INFO(...)     TC_LOG_INFO("eluna", __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    TC_LOG_ERROR("eluna", __VA_ARGS__);
@@ -45,38 +36,6 @@ typedef QueryResult ElunaQuery;
 #define HIGHGUID_MO_TRANSPORT   HighGuid::Mo_Transport
 #define HIGHGUID_INSTANCE       HighGuid::Instance
 #define HIGHGUID_GROUP          HighGuid::Group
-#elif AZEROTHCORE
-typedef QueryResult ElunaQuery;
-#define ELUNA_LOG_INFO(...)     sLog->outString(__VA_ARGS__);
-#define ELUNA_LOG_ERROR(...)    sLog->outError(__VA_ARGS__);
-#define ELUNA_LOG_DEBUG(...)    sLog->outDebug(LOG_FILTER_NONE,__VA_ARGS__);
-#define GET_GUID                GetGUID
-#else
-typedef QueryNamedResult ElunaQuery;
-#define ASSERT                  MANGOS_ASSERT
-#define ELUNA_LOG_INFO(...)     sLog.outString(__VA_ARGS__);
-#define ELUNA_LOG_ERROR(...)    sLog.outErrorEluna(__VA_ARGS__);
-#define ELUNA_LOG_DEBUG(...)    sLog.outDebug(__VA_ARGS__);
-#define GET_GUID                GetObjectGuid
-#define GetGameObjectTemplate   GetGameObjectInfo
-#define GetItemTemplate         GetItemPrototype
-#define GetTemplate             GetProto
-#endif
-
-#ifdef TRINITY || defined(MANGOS)
-#ifndef MAKE_NEW_GUID
-#define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
-#endif
-#ifndef GUID_ENPART
-#define GUID_ENPART(guid)       ObjectGuid(guid).GetEntry()
-#endif
-#ifndef GUID_LOPART
-#define GUID_LOPART(guid)       ObjectGuid(guid).GetCounter()
-#endif
-#ifndef GUID_HIPART
-#define GUID_HIPART(guid)       ObjectGuid(guid).GetHigh()
-#endif
-#endif
 
 class Unit;
 class WorldObject;

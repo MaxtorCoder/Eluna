@@ -20,7 +20,7 @@ namespace LuaGroup
      */
     int IsLeader(lua_State* L, Group* group)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
         Eluna::Push(L, group->IsLeader(ObjectGuid(guid)));
         return 1;
     }
@@ -66,7 +66,7 @@ namespace LuaGroup
      */
     int IsMember(lua_State* L, Group* group)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
         Eluna::Push(L, group->IsMember(ObjectGuid(guid)));
         return 1;
     }
@@ -79,7 +79,7 @@ namespace LuaGroup
      */
     int IsAssistant(lua_State* L, Group* group)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
         Eluna::Push(L, group->IsAssistant(ObjectGuid(guid)));
         return 1;
     }
@@ -175,11 +175,7 @@ namespace LuaGroup
 
         for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
         {
-#ifdef TRINITY || AZEROTHCORE
             Player* member = itr->GetSource();
-#else
-            Player* member = itr->getSource();
-#endif
 
             if (!member || !member->GetSession())
                 continue;
@@ -199,11 +195,7 @@ namespace LuaGroup
      */
     int GetLeaderGUID(lua_State* L, Group* group)
     {
-#ifdef TRINITY || AZEROTHCORE
-        Eluna::Push(L, group->GetLeaderGUID());
-#else
-        Eluna::Push(L, group->GetLeaderGuid());
-#endif
+        Eluna::Push(L, &group->GetLeaderGUID());
         return 1;
     }
 
@@ -214,11 +206,7 @@ namespace LuaGroup
      */
     int GetGUID(lua_State* L, Group* group)
     {
-#ifdef CLASSIC
-        Eluna::Push(L, group->GetId());
-#else
-        Eluna::Push(L, group->GET_GUID());
-#endif
+        Eluna::Push(L, &group->GET_GUID());
         return 1;
     }
 
@@ -231,11 +219,8 @@ namespace LuaGroup
     int GetMemberGUID(lua_State* L, Group* group)
     {
         const char* name = Eluna::CHECKVAL<const char*>(L, 2);
-#ifdef TRINITY || AZEROTHCORE
-        Eluna::Push(L, group->GetMemberGUID(name));
-#else
-        Eluna::Push(L, group->GetMemberGuid(name));
-#endif
+
+        Eluna::Push(L, &group->GetMemberGUID(name));
         return 1;
     }
 
@@ -258,7 +243,7 @@ namespace LuaGroup
      */
     int GetMemberGroup(lua_State* L, Group* group)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
         Eluna::Push(L, group->GetMemberGroup(ObjectGuid(guid)));
         return 1;
     }
@@ -270,7 +255,7 @@ namespace LuaGroup
      */
     int SetLeader(lua_State* L, Group* group)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
         group->ChangeLeader(ObjectGuid(guid));
         group->SendUpdate();
         return 0;
@@ -289,11 +274,7 @@ namespace LuaGroup
         bool ignorePlayersInBg = Eluna::CHECKVAL<bool>(L, 3);
         uint64 ignore = Eluna::CHECKVAL<uint64>(L, 4);
 
-#ifdef CMANGOS
-        group->BroadcastPacket(*data, ignorePlayersInBg, -1, ObjectGuid(ignore));
-#else
         group->BroadcastPacket(data, ignorePlayersInBg, -1, ObjectGuid(ignore));
-#endif
         return 0;
     }
 
@@ -319,11 +300,7 @@ namespace LuaGroup
         ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
         uint32 method = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
-#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, group->RemoveMember(ObjectGuid(guid), (RemoveMethod)method));
-#else
-        Eluna::Push(L, group->RemoveMember(ObjectGuid(guid), method));
-#endif
         return 1;
     }
 
@@ -384,14 +361,10 @@ namespace LuaGroup
         uint64 target = Eluna::CHECKVAL<uint64>(L, 3);
         uint64 setter = Eluna::CHECKVAL<uint64>(L, 4, 0);
 
-        if (icon >= TARGETICONCOUNT)
+        if (icon >= 99)
             return luaL_argerror(L, 2, "valid target icon expected");
 
-#if (defined(CLASSIC) || defined(TBC))
-        group->SetTargetIcon(icon, ObjectGuid(target));
-#else
-        group->SetTargetIcon(icon, ObjectGuid(setter), ObjectGuid(target));
-#endif
+        group->SetTargetIcon(icon, ObjectGuid(setter), ObjectGuid(target), 0);
         return 0;
     }
 

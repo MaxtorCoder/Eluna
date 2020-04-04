@@ -13,9 +13,6 @@
 
 #include "Group.h"
 #include "Item.h"
-#ifndef TRINITY
-#include "Player.h"
-#endif
 #include "Weather.h"
 #include "World.h"
 #include "Hooks.h"
@@ -28,46 +25,23 @@ extern "C"
 #include "lua.h"
 };
 
-#ifdef TRINITY || AZEROTHCORE
 struct ItemTemplate;
 typedef BattlegroundTypeId BattleGroundTypeId;
-#else
-struct ItemPrototype;
-typedef ItemPrototype ItemTemplate;
-typedef SpellEffectIndex SpellEffIndex;
-struct SpellEntry;
-typedef SpellEntry SpellInfo;
-#ifdef CLASSIC
-typedef int Difficulty;
-#endif
-#endif
-#ifndef AZEROTHCORE
 struct AreaTriggerEntry;
-#else
-typedef AreaTrigger AreaTriggerEntry;
-#endif
 class AuctionHouseObject;
 struct AuctionEntry;
-#ifdef TRINITY || AZEROTHCORE
 class Battleground;
 typedef Battleground BattleGround;
-#endif
 class Channel;
 class Corpse;
 class Creature;
 class CreatureAI;
 class GameObject;
-#ifdef TRINITY || AZEROTHCORE
 class GameObjectAI;
-#endif
 class Guild;
 class Group;
-#ifdef TRINITY || AZEROTHCORE
 class InstanceScript;
 typedef InstanceScript InstanceData;
-#else
-class InstanceData;
-#endif
 class ElunaInstanceAI;
 class Item;
 class Pet;
@@ -75,26 +49,12 @@ class Player;
 class Quest;
 class Spell;
 class SpellCastTargets;
-#ifdef TRINITY || AZEROTHCORE
 class TempSummon;
-#else
-class TemporarySummon;
-typedef TemporarySummon TempSummon;
-#endif
 // class Transport;
 class Unit;
 class Weather;
 class WorldPacket;
-#ifndef CLASSIC
-#ifndef TBC
-#ifdef TRINITY || AZEROTHCORE
 class Vehicle;
-#else
-class VehicleInfo;
-typedef VehicleInfo Vehicle;
-#endif
-#endif
-#endif
 
 struct lua_State;
 class EventMgr;
@@ -117,9 +77,6 @@ struct LuaScript
 #define ELUNA_STATE_PTR     "Eluna State Ptr"
 #define LOCK_ELUNA Eluna::Guard __guard(Eluna::GetLock())
 
-#ifndef TRINITY
-#define TC_GAME_API
-#endif
 class TC_GAME_API Eluna
 {
 public:
@@ -323,11 +280,7 @@ public:
     bool IsEnabled() const { return enabled && IsInitialized(); }
     bool HasLuaState() const { return L != NULL; }
     uint64 GetCallstackId() const { return callstackid; }
-#ifdef BFA
     int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
-#else
-    int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
-#endif
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
@@ -413,12 +366,8 @@ public:
     bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest, uint32 opt);
     void GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject);
-#ifndef CLASSIC
-#ifndef TBC
     void OnDestroyed(GameObject* pGameObject, WorldObject* attacker);
     void OnDamaged(GameObject* pGameObject, WorldObject* attacker);
-#endif
-#endif
     void OnLootStateChanged(GameObject* pGameObject, uint32 state);
     void OnGameObjectStateChanged(GameObject* pGameObject, uint32 state);
     void UpdateAI(GameObject* pGameObject, uint32 diff);
@@ -465,16 +414,12 @@ public:
     void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
 
-#ifndef CLASSIC
-#ifndef TBC
     /* Vehicle */
     void OnInstall(Vehicle* vehicle);
     void OnUninstall(Vehicle* vehicle);
     void OnInstallAccessory(Vehicle* vehicle, Creature* accessory);
     void OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId);
     void OnRemovePassenger(Vehicle* vehicle, Unit* passenger);
-#endif
-#endif
 
     /* AreaTrigger */
     bool OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger);
@@ -533,11 +478,7 @@ public:
 
     /* World */
     void OnOpenStateChange(bool open);
-#ifndef AZEROTHCORE
     void OnConfigLoad(bool reload);
-#else
-    void OnConfigLoad(bool reload, bool isBefore);
-#endif
     void OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask);
     void OnShutdownCancel();
     void OnStartup();
@@ -547,11 +488,7 @@ public:
 
     /* Battle Ground */
     void OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
-#if AZEROTHCORE
-    void OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, TeamId winner);
-#else
     void OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, Team winner);
-#endif
     void OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
     void OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
 };

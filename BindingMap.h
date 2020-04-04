@@ -251,26 +251,14 @@ template <typename T>
 struct UniqueObjectKey
 {
     T event_id;
-#ifdef BFA
     ObjectGuid guid;
-#else
-    ObjectGuid guid;
-#endif
     uint32 instance_id;
 
-#ifdef BFA
     UniqueObjectKey(T event_id, ObjectGuid guid, uint32 instance_id) :
         event_id(event_id),
         guid(guid),
         instance_id(instance_id)
     { }
-#else
-    UniqueObjectKey(T event_id, ObjectGuid guid, uint32 instance_id) :
-        event_id(event_id),
-        guid(guid),
-        instance_id(instance_id)
-    { }
-#endif
 };
 
 class hash_helper
