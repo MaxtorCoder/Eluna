@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -153,30 +153,14 @@ ElunaRegister<Object> ObjectMethods[] =
     { "GetEntry", &LuaObject::GetEntry },
     { "GetGUID", &LuaObject::GetGUID },
     { "GetGUIDLow", &LuaObject::GetGUIDLow },
-    { "GetInt32Value", &LuaObject::GetInt32Value },
-    { "GetUInt32Value", &LuaObject::GetUInt32Value },
-    { "GetFloatValue", &LuaObject::GetFloatValue },
-    { "GetByteValue", &LuaObject::GetByteValue },
-    { "GetUInt16Value", &LuaObject::GetUInt16Value },
-    { "GetUInt64Value", &LuaObject::GetUInt64Value },
     { "GetScale", &LuaObject::GetScale },
     { "GetTypeId", &LuaObject::GetTypeId },
 
     // Setters
-    { "SetInt32Value", &LuaObject::SetInt32Value },
-    { "SetUInt32Value", &LuaObject::SetUInt32Value },
-    { "UpdateUInt32Value", &LuaObject::UpdateUInt32Value },
-    { "SetFloatValue", &LuaObject::SetFloatValue },
-    { "SetByteValue", &LuaObject::SetByteValue },
-    { "SetUInt16Value", &LuaObject::SetUInt16Value },
-    { "SetInt16Value", &LuaObject::SetInt16Value },
-    { "SetUInt64Value", &LuaObject::SetUInt64Value },
     { "SetScale", &LuaObject::SetScale },
-    { "SetFlag", &LuaObject::SetFlag },
 
     // Boolean
     { "IsInWorld", &LuaObject::IsInWorld },
-    { "HasFlag", &LuaObject::HasFlag },
 
     // Other
     { "ToGameObject", &LuaObject::ToGameObject },
@@ -184,7 +168,6 @@ ElunaRegister<Object> ObjectMethods[] =
     { "ToCreature", &LuaObject::ToCreature },
     { "ToPlayer", &LuaObject::ToPlayer },
     { "ToCorpse", &LuaObject::ToCorpse },
-    { "RemoveFlag", &LuaObject::RemoveFlag },
 
     { NULL, NULL }
 };
@@ -194,8 +177,6 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
     // Getters
     { "GetName", &LuaWorldObject::GetName },
     { "GetMap", &LuaWorldObject::GetMap },
-    { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
-    { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
     { "GetInstanceId", &LuaWorldObject::GetInstanceId },
     { "GetAreaId", &LuaWorldObject::GetAreaId },
     { "GetZoneId", &LuaWorldObject::GetZoneId },
@@ -219,6 +200,7 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
     { "GetExactDistance2d", &LuaWorldObject::GetExactDistance2d },
     { "GetRelativePoint", &LuaWorldObject::GetRelativePoint },
     { "GetAngle", &LuaWorldObject::GetAngle },
+    { "GetObjectGuid", &LuaWorldObject::GetObjectGuid },
 
     // Boolean
     { "IsWithinLoS", &LuaWorldObject::IsWithinLoS },
@@ -387,7 +369,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "StopSpellCast", &LuaUnit::StopSpellCast },
     { "InterruptSpell", &LuaUnit::InterruptSpell },
     { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer },
-    { "Emote", &LuaUnit::Emote },
+    { "Emote", &LuaUnit::UnitEmote },
     { "EmoteState", &LuaUnit::EmoteState },
     { "CountPctFromCurHealth", &LuaUnit::CountPctFromCurHealth },
     { "CountPctFromMaxHealth", &LuaUnit::CountPctFromMaxHealth },
@@ -451,9 +433,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetQuestStatus", &LuaPlayer::GetQuestStatus },
     { "GetInGameTime", &LuaPlayer::GetInGameTime },
     { "GetComboPoints", &LuaPlayer::GetComboPoints },
-    { "GetComboTarget", &LuaPlayer::GetComboTarget },
     { "GetGuildName", &LuaPlayer::GetGuildName },
-    { "GetFreeTalentPoints", &LuaPlayer::GetFreeTalentPoints },
     { "GetActiveSpec", &LuaPlayer::GetActiveSpec },
     { "GetSpecsCount", &LuaPlayer::GetSpecsCount },
     { "GetSpellCooldownDelay", &LuaPlayer::GetSpellCooldownDelay },
@@ -506,7 +486,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SetRestBonus", &LuaPlayer::SetRestBonus },
     { "SetQuestStatus", &LuaPlayer::SetQuestStatus },
     { "SetReputation", &LuaPlayer::SetReputation },
-    { "SetFreeTalentPoints", &LuaPlayer::SetFreeTalentPoints },
     { "SetGuildRank", &LuaPlayer::SetGuildRank },
     // {"SetMovement", &LuaPlayer::SetMovement},                  // :SetMovement(type) - UNDOCUMENTED - Sets player's movement type
     { "SetSkill", &LuaPlayer::SetSkill },
@@ -587,7 +566,6 @@ ElunaRegister<Player> PlayerMethods[] =
 
     // Other
     { "SendBroadcastMessage", &LuaPlayer::SendBroadcastMessage },
-    { "SendAreaTriggerMessage", &LuaPlayer::SendAreaTriggerMessage },
     { "SendNotification", &LuaPlayer::SendNotification },
     { "SendPacket", &LuaPlayer::SendPacket },
     { "SendAddonMessage", &LuaPlayer::SendAddonMessage },
@@ -621,13 +599,11 @@ ElunaRegister<Player> PlayerMethods[] =
     // {"KilledPlayerCredit", &LuaPlayer::KilledPlayerCredit},                              // :KilledPlayerCredit() - UNDOCUMENTED - Satisfies a player kill for the player
     // {"KillGOCredit", &LuaPlayer::KillGOCredit},                                          // :KillGOCredit(GOEntry[, GUID]) - UNDOCUMENTED - Credits the player for destroying a GO, guid is optional
     { "TalkedToCreature", &LuaPlayer::TalkedToCreature },
-    { "ResetPetTalents", &LuaPlayer::ResetPetTalents },
     { "AddComboPoints", &LuaPlayer::AddComboPoints },
     // {"GainSpellComboPoints", &LuaPlayer::GainSpellComboPoints},                          // :GainSpellComboPoints(amount) - UNDOCUMENTED - Player gains spell combo points
     { "ClearComboPoints", &LuaPlayer::ClearComboPoints },
     { "RemoveSpell", &LuaPlayer::RemoveSpell },
     { "ResetTalents", &LuaPlayer::ResetTalents },
-    { "ResetTalentsCost", &LuaPlayer::ResetTalentsCost },
     // {"AddTalent", &LuaPlayer::AddTalent},                                                // :AddTalent(spellid, spec, learning) - UNDOCUMENTED - Adds a talent spell for the player to given spec
     { "RemoveFromGroup", &LuaPlayer::RemoveFromGroup },
     { "KillPlayer", &LuaPlayer::KillPlayer },
@@ -1009,7 +985,7 @@ ElunaRegister<ElunaQuery> QueryMethods[] =
     // Getters
     { "GetColumnCount", &LuaQuery::GetColumnCount },
     { "GetRowCount", &LuaQuery::GetRowCount },
-    { "GetRow", &LuaQuery::GetRow },
+    // { "GetRow", &LuaQuery::GetRow },                 //< Fix this
     { "GetBool", &LuaQuery::GetBool },
     { "GetUInt8", &LuaQuery::GetUInt8 },
     { "GetUInt16", &LuaQuery::GetUInt16 },

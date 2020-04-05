@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+ * Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
  * This program is free software licensed under GPL version 3
  * Please see the included DOCS/LICENSE.md for more information
  */
@@ -116,11 +116,7 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 {
     START_HOOK_WITH_RETVAL(TRIGGER_EVENT_ON_TRIGGER, false);
     Push(pPlayer);
-#ifndef AZEROTHCORE
-    Push(pTrigger->id);
-#else
-    Push(pTrigger->entry);
-#endif
+    Push(pTrigger->ID);
     return CallAllFunctionsBool(ServerEventBindings, key);
 }
 
@@ -137,18 +133,9 @@ void Eluna::OnChange(Weather* /*weather*/, uint32 zone, WeatherState state, floa
 // Auction House
 void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
-#ifdef TRINITY
+    Player* owner = eObjectAccessor()FindPlayer(ObjectGuid::Create<HIGHGUID_PLAYER>(entry->owner));
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
     uint32 expiretime = entry->expire_time;
-#elif AZEROTHCORE
-    Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
-    uint32 expiretime = entry->expire_time;
-#else
-    Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
-    uint32 expiretime = entry->expireTime;
-#endif
-
 
     if (!owner || !item)
         return;
@@ -167,18 +154,9 @@ void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 
 void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
-#ifdef TRINITY
+    Player* owner = eObjectAccessor()FindPlayer(ObjectGuid::Create<HIGHGUID_PLAYER>(entry->owner));
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
     uint32 expiretime = entry->expire_time;
-#elif AZEROTHCORE
-    Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
-    uint32 expiretime = entry->expire_time;
-#else
-    Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
-    uint32 expiretime = entry->expireTime;
-#endif
-
 
     if (!owner || !item)
         return;
@@ -197,19 +175,9 @@ void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 
 void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
-#ifdef TRINITY
+    Player* owner = eObjectAccessor()FindPlayer(ObjectGuid::Create<HIGHGUID_PLAYER>(entry->owner));
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
     uint32 expiretime = entry->expire_time;
-#elif AZEROTHCORE
-    Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
-    uint32 expiretime = entry->expire_time;
-#else
-    Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
-    uint32 expiretime = entry->expireTime;
-#endif
-
-
     if (!owner || !item)
         return;
 
@@ -227,18 +195,9 @@ void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 
 void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
-#ifdef TRINITY
+    Player* owner = eObjectAccessor()FindPlayer(ObjectGuid::Create<HIGHGUID_PLAYER>(entry->owner));
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
     uint32 expiretime = entry->expire_time;
-#elif AZEROTHCORE
-    Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
-    uint32 expiretime = entry->expire_time;
-#else
-    Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
-    uint32 expiretime = entry->expireTime;
-#endif
-
 
     if (!owner || !item)
         return;
@@ -262,17 +221,10 @@ void Eluna::OnOpenStateChange(bool open)
     CallAllFunctions(ServerEventBindings, key);
 }
 
-#ifndef AZEROTHCORE
 void Eluna::OnConfigLoad(bool reload)
-#else
-void Eluna::OnConfigLoad(bool reload, bool isBefore)
-#endif
 {
     START_HOOK(WORLD_EVENT_ON_CONFIG_LOAD);
     Push(reload);
-#ifdef AZEROTHCORE
-    Push(isBefore);
-#endif
     CallAllFunctions(ServerEventBindings, key);
 }
 

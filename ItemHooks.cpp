@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+ * Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
  * This program is free software licensed under GPL version 3
  * Please see the included DOCS/LICENSE.md for more information
  */
@@ -69,16 +69,7 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 
     // Send equip error that shows no message
     // This is a hack fix to stop spell casting visual bug when a spell is not cast on use
-    WorldPacket data(SMSG_INVENTORY_CHANGE_FAILURE, 18);
-    data << uint8(59); // EQUIP_ERR_NONE / EQUIP_ERR_CANT_BE_DISENCHANTED
-    data << ObjectGuid(guid);
-    data << ObjectGuid(uint64(0));
-    data << uint8(0);
-#ifdef CMANGOS
-    pPlayer->GetSession()->SendPacket(data);
-#else
-    pPlayer->GetSession()->SendPacket(&data);
-#endif
+    pPlayer->SendEquipError(InventoryResult(EQUIP_ERR_OK | EQUIP_ERR_CANT_BE_DISENCHANTED));
     return false;
 }
 
@@ -87,7 +78,7 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_USE, pItem->GetEntry(), true);
     Push(pPlayer);
     Push(pItem);
-#ifdef TRINITY || AZEROTHCORE
+
     if (GameObject* target = targets.GetGOTarget())
         Push(target);
     else if (Item* target = targets.GetItemTarget())
@@ -100,27 +91,15 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
         Push(target);
     else
         Push();
-#else
-    if (GameObject* target = targets.getGOTarget())
-        Push(target);
-    else if (Item* target = targets.getItemTarget())
-        Push(target);
-    else if (Corpse* target = pPlayer->GetMap()->GetCorpse(targets.getCorpseTargetGuid()))
-        Push(target);
-    else if (Unit* target = targets.getUnitTarget())
-        Push(target);
-    else
-        Push();
-#endif
 
     return CallAllFunctionsBool(ItemEventBindings, key, true);
 }
 
 bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
 {
-    START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_EXPIRE, pProto->ItemId, false);
+    START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_EXPIRE, pProto->GetId(), false);
     Push(pPlayer);
-    Push(pProto->ItemId);
+    Push(pProto->GetId());
     return CallAllFunctionsBool(ItemEventBindings, key);
 }
 

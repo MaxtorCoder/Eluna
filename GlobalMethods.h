@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -1413,7 +1413,7 @@ namespace LuaGlobalFunctions
         {
             if (save)
             {
-                Creature* creature;
+                Creature* creature = new Creature;
                 if (!creature->CreateCreature(entry, map, pos))
                 {
                     Eluna::Push(L);
@@ -1426,8 +1426,12 @@ namespace LuaGlobalFunctions
                 // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells()
                 // current "creature" variable is deleted and created fresh new, otherwise old values might trigger asserts or cause undefined behavior
                 creature->CleanupsBeforeDelete();
+                delete creature;
+
+                creature = new Creature;
                 if (!creature->LoadFromDB(db_guid, map))
                 {
+                    delete creature;
                     Eluna::Push(L);
                     return 1;
                 }
@@ -1469,7 +1473,7 @@ namespace LuaGlobalFunctions
                 return 1;
             }
 
-            GameObject* object;
+            GameObject* object = new GameObject;
             uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
             QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
 
@@ -1499,6 +1503,7 @@ namespace LuaGlobalFunctions
             }
             else
                 map->AddToMap(object);
+
             Eluna::Push(L, object);
             return 1;
         }
@@ -1522,7 +1527,7 @@ namespace LuaGlobalFunctions
         if (opcode >= OpcodeMisc::MAX_OPCODE)
             return luaL_argerror(L, 1, "valid opcode expected");
 
-        Eluna::Push(L, new WorldPacket((OpcodeServer)opcode, size));
+        Eluna::Push(L, new WorldPacket((OpcodeServerList)opcode, size));
         return 1;
     }
 
@@ -1543,7 +1548,7 @@ namespace LuaGlobalFunctions
         uint32 incrtime = Eluna::CHECKVAL<uint32>(L, 4);
         uint32 extendedcost = Eluna::CHECKVAL<uint32>(L, 5);
 
-        VendorItem* vendorItem;
+        VendorItem* vendorItem = new VendorItem;
         vendorItem->maxcount = maxcount;
         vendorItem->incrtime = incrtime;
         vendorItem->item = item;
@@ -1553,6 +1558,8 @@ namespace LuaGlobalFunctions
             return 0;
 
         eObjectMgr->AddVendorItem(entry, *vendorItem);
+
+        delete vendorItem;
         return 0;
     }
 

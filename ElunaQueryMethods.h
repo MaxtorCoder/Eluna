@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -271,46 +271,46 @@ namespace LuaQuery
      *
      * @return table rowData : table filled with row columns and data where `T[column] = data`
      */
-    int GetRow(lua_State* L, ElunaQuery* result)
-    {
-        uint32 col = RESULT->GetFieldCount();
-        Field* row = RESULT->Fetch();
-
-        lua_createtable(L, 0, col);
-        int tbl = lua_gettop(L);
-
-        for (uint32 i = 0; i < col; ++i)
-        {
-            Eluna::Push(L, RESULT->GetFieldName(i));
-
-            const char* str = row[i].GetCString();
-            if (row[i].IsNull() || !str)
-                Eluna::Push(L);
-            else
-            {
-                // MYSQL_TYPE_LONGLONG Interpreted as string for lua
-                switch (row[i].GetType())
-                {
-                    case DatabaseFieldTypes::Int8:
-                    case DatabaseFieldTypes::Int16:
-                    case DatabaseFieldTypes::Int32:
-                    case DatabaseFieldTypes::Int64:
-                    case DatabaseFieldTypes::Float:
-                    case DatabaseFieldTypes::Double:
-                        Eluna::Push(L, strtod(str, NULL));
-                        break;
-                    default:
-                        Eluna::Push(L, str);
-                        break;
-                }
-            }
-
-            lua_rawset(L, tbl);
-        }
-
-        lua_settop(L, tbl);
-        return 1;
-    }
+    // int GetRow(lua_State* L, ElunaQuery* result)
+    // {
+    //     uint32 col = RESULT->GetFieldCount();
+    //     Field* row = RESULT->Fetch();
+    // 
+    //     lua_createtable(L, 0, col);
+    //     int tbl = lua_gettop(L);
+    // 
+    //     for (uint32 i = 0; i < col; ++i)
+    //     {
+    //         Eluna::Push(L, RESULT->GetFieldName(i));
+    // 
+    //         const char* str = row[i].GetCString();
+    //         if (row[i].IsNull() || !str)
+    //             Eluna::Push(L);
+    //         else
+    //         {
+    //             // MYSQL_TYPE_LONGLONG Interpreted as string for lua
+    //             switch (row[i].GetType())
+    //             {
+    //                 case DatabaseFieldTypes::Int8:
+    //                 case DatabaseFieldTypes::Int16:
+    //                 case DatabaseFieldTypes::Int32:
+    //                 case DatabaseFieldTypes::Int64:
+    //                 case DatabaseFieldTypes::Float:
+    //                 case DatabaseFieldTypes::Double:
+    //                     Eluna::Push(L, strtod(str, NULL));
+    //                     break;
+    //                 default:
+    //                     Eluna::Push(L, str);
+    //                     break;
+    //             }
+    //         }
+    // 
+    //         lua_rawset(L, tbl);
+    //     }
+    // 
+    //     lua_settop(L, tbl);
+    //     return 1;
+    // }
 };
 #undef RESULT
 

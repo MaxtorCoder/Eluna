@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -30,12 +30,9 @@ typedef QueryResult ElunaQuery;
 #define HIGHGUID_PET            HighGuid::Pet
 #define HIGHGUID_TRANSPORT      HighGuid::Transport
 #define HIGHGUID_VEHICLE        HighGuid::Vehicle
-#define HIGHGUID_CONTAINER      HighGuid::Container
 #define HIGHGUID_DYNAMICOBJECT  HighGuid::DynamicObject
 #define HIGHGUID_CORPSE         HighGuid::Corpse
-#define HIGHGUID_MO_TRANSPORT   HighGuid::Mo_Transport
-#define HIGHGUID_INSTANCE       HighGuid::Instance
-#define HIGHGUID_GROUP          HighGuid::Group
+#define HIGHGUID_GROUP          HighGuid::Party
 
 class Unit;
 class WorldObject;

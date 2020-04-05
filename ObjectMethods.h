@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -25,22 +25,6 @@
 namespace LuaObject
 {
     /**
-     * Returns `true` if the specified flag is set, otherwise `false`.
-     *
-     * @param uint16 index : the index of the flags data in the [Object]
-     * @param uint32 flag : the flag to check for in the flags data
-     * @return bool hasFlag
-     */
-    int HasFlag(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint32 flag = Eluna::CHECKVAL<uint32>(L, 3);
-
-        Eluna::Push(L, obj->HasFlag(index, flag));
-        return 1;
-    }
-
-    /**
      * Returns `true` if the [Object] has been added to its [Map], otherwise `false`.
      *
      * @return bool inWorld
@@ -48,79 +32,6 @@ namespace LuaObject
     int IsInWorld(lua_State* L, Object* obj)
     {
         Eluna::Push(L, obj->IsInWorld());
-        return 1;
-    }
-
-    /**
-     * Returns the data at the specified index, casted to a signed 32-bit integer.
-     *
-     * @param uint16 index
-     * @return int32 value
-     */
-    int GetInt32Value(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        Eluna::Push(L, obj->GetInt32Value(index));
-        return 1;
-    }
-
-    /**
-     * Returns the data at the specified index, casted to a unsigned 32-bit integer.
-     *
-     * @param uint16 index
-     * @return uint32 value
-     */
-    int GetUInt32Value(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        Eluna::Push(L, obj->GetUInt32Value(index));
-        return 1;
-    }
-
-    /**
-     * Returns the data at the specified index, casted to a single-precision floating point value.
-     *
-     * @param uint16 index
-     * @return float value
-     */
-    int GetFloatValue(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        Eluna::Push(L, obj->GetFloatValue(index));
-        return 1;
-    }
-
-    /**
-     * Returns the data at the specified index and offset, casted to an unsigned 8-bit integer.
-     *
-     * E.g. if you want the second byte at index 10, you would pass in 1 as the offset.
-     *
-     * @param uint16 index
-     * @param uint8 offset : should be 0, 1, 2, or 3
-     * @return uint8 value
-     */
-    int GetByteValue(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint8 offset = Eluna::CHECKVAL<uint8>(L, 3);
-        Eluna::Push(L, obj->GetByteValue(index, offset));
-        return 1;
-    }
-
-    /**
-     * Returns the data at the specified index and offset, casted to a signed 16-bit integer.
-     *
-     * E.g. if you want the second half-word at index 10, you would pass in 1 as the offset.
-     *
-     * @param uint16 index
-     * @param uint8 offset : should be 0 or 1
-     * @return uint16 value
-     */
-    int GetUInt16Value(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint8 offset = Eluna::CHECKVAL<uint8>(L, 3);
-        Eluna::Push(L, obj->GetUInt16Value(index, offset));
         return 1;
     }
 
@@ -133,11 +44,7 @@ namespace LuaObject
      */
     int GetScale(lua_State* L, Object* obj)
     {
-#ifndef AZEROTHCORE
         Eluna::Push(L, obj->GetObjectScale());
-#else
-        Eluna::Push(L, obj->GetFloatValue(OBJECT_FIELD_SCALE_X));
-#endif
         return 1;
     }
 
@@ -168,7 +75,7 @@ namespace LuaObject
      */
     int GetGUID(lua_State* L, Object* obj)
     {
-        Eluna::Push(L, obj->GET_GUID());
+        Eluna::Push(L, &obj->GET_GUID());
         return 1;
     }
 
@@ -186,11 +93,7 @@ namespace LuaObject
      */
     int GetGUIDLow(lua_State* L, Object* obj)
     {
-#ifdef TRINITY
         Eluna::Push(L, obj->GetGUID().GetCounter());
-#else
-        Eluna::Push(L, obj->GetGUIDLow());
-#endif
         return 1;
     }
 
@@ -218,143 +121,6 @@ namespace LuaObject
     }
 
     /**
-     * Returns the data at the specified index, casted to an unsigned 64-bit integer.
-     *
-     * @param uint16 index
-     * @return uint64 value
-     */
-    int GetUInt64Value(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        obj->GetUInt64Value(index);
-        return 0;
-    }
-
-    /**
-     * Sets the specified flag in the data value at the specified index.
-     *
-     * If the flag was already set, it remains set.
-     *
-     * To remove a flag, use [Object:RemoveFlag].
-     *
-     * @param uint16 index
-     * @param uint32 value
-     */
-    int SetFlag(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint32 flag = Eluna::CHECKVAL<uint32>(L, 3);
-
-        obj->SetFlag(index, flag);
-        return 0;
-    }
-
-    /**
-     * Sets the data at the specified index to the given value, converted to a signed 32-bit integer.
-     *
-     * @param uint16 index
-     * @param int32 value
-     */
-    int SetInt32Value(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        int32 value = Eluna::CHECKVAL<int32>(L, 3);
-        obj->SetInt32Value(index, value);
-        return 0;
-    }
-
-    /**
-     * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
-     *
-     * @param uint16 index
-     * @param uint32 value
-     */
-    int SetUInt32Value(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint32 value = Eluna::CHECKVAL<uint32>(L, 3);
-        obj->SetUInt32Value(index, value);
-        return 0;
-    }
-
-    /**
-     * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
-     *
-     * @param uint16 index
-     * @param uint32 value
-     */
-    int UpdateUInt32Value(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint32 value = Eluna::CHECKVAL<uint32>(L, 3);
-        obj->UpdateUInt32Value(index, value);
-        return 0;
-    }
-
-    /**
-     * Sets the data at the specified index to the given value, converted to a single-precision floating point value.
-     *
-     * @param uint16 index
-     * @param float value
-     */
-    int SetFloatValue(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        float value = Eluna::CHECKVAL<float>(L, 3);
-
-        obj->SetFloatValue(index, value);
-        return 0;
-    }
-
-    /**
-     * Sets the data at the specified index and offset to the given value, converted to an unsigned 8-bit integer.
-     *
-     * @param uint16 index
-     * @param uint8 offset : should be 0, 1, 2, or 3
-     * @param uint8 value
-     */
-    int SetByteValue(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint8 offset = Eluna::CHECKVAL<uint8>(L, 3);
-        uint8 value = Eluna::CHECKVAL<uint8>(L, 4);
-        obj->SetByteValue(index, offset, value);
-        return 0;
-    }
-
-    /**
-     * Sets the data at the specified index to the given value, converted to an unsigned 16-bit integer.
-     *
-     * @param uint16 index
-     * @param uint8 offset : should be 0 or 1
-     * @param uint16 value
-     */
-    int SetUInt16Value(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint8 offset = Eluna::CHECKVAL<uint8>(L, 3);
-        uint16 value = Eluna::CHECKVAL<uint16>(L, 4);
-        obj->SetUInt16Value(index, offset, value);
-        return 0;
-    }
-
-    /**
-     * Sets the data at the specified index to the given value, converted to a signed 16-bit integer.
-     *
-     * @param uint16 index
-     * @param uint8 offset : should be 0 or 1
-     * @param int16 value
-     */
-    int SetInt16Value(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint8 offset = Eluna::CHECKVAL<uint8>(L, 3);
-        int16 value = Eluna::CHECKVAL<int16>(L, 4);
-        obj->SetInt16Value(index, offset, value);
-        return 0;
-    }
-
-    /**
      * Sets the [Object]'s scale/size to the given value.
      *
      * @param float scale
@@ -364,35 +130,6 @@ namespace LuaObject
         float size = Eluna::CHECKVAL<float>(L, 2);
 
         obj->SetObjectScale(size);
-        return 0;
-    }
-
-    /**
-     * Sets the data at the specified index to the given value, converted to an unsigned 64-bit integer.
-     *
-     * @param uint16 index
-     * @param uint64 value
-     */
-    int SetUInt64Value(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint64 value = Eluna::CHECKVAL<uint64>(L, 3);
-        obj->SetUInt64Value(index, value);
-        return 0;
-    }
-
-    /**
-     * Removes a flag from the value at the specified index.
-     *
-     * @param uint16 index
-     * @param uint32 flag
-     */
-    int RemoveFlag(lua_State* L, Object* obj)
-    {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint32 flag = Eluna::CHECKVAL<uint32>(L, 3);
-
-        obj->RemoveFlag(index, flag);
         return 0;
     }
 

@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -52,15 +52,11 @@ namespace LuaQuest
     int HasFlag(lua_State* L, Quest* quest)
     {
         uint32 flag = Eluna::CHECKVAL<uint32>(L, 2);
-#ifdef TRINITY || AZEROTHCORE
-        Eluna::Push(L, quest->HasFlag(flag));
-#else
-        Eluna::Push(L, quest->HasQuestFlag((QuestFlags)flag));
-#endif
+
+        Eluna::Push(L, quest->HasFlag(static_cast<QuestFlags>(flag)));
         return 1;
     }
 
-#ifndef CLASSIC
     /**
      * Returns 'true' if the [Quest] is a daily quest, false otherwise.
      *
@@ -71,7 +67,6 @@ namespace LuaQuest
         Eluna::Push(L, quest->IsDaily());
         return 1;
     }
-#endif
 
     /**
      * Returns 'true' if the [Quest] is repeatable, false otherwise.
@@ -157,11 +152,7 @@ namespace LuaQuest
      */
     int GetFlags(lua_State* L, Quest* quest)
     {
-#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, quest->GetFlags());
-#else
-        Eluna::Push(L, quest->GetQuestFlags());
-#endif
         return 1;
     }
 
@@ -174,7 +165,7 @@ namespace LuaQuest
      */
     int GetType(lua_State* L, Quest* quest)
     {
-        Eluna::Push(L, quest->GetType());
+        Eluna::Push(L, quest->GetQuestType());
         return 1;
     }
 

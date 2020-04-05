@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+ * Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
  * This program is free software licensed under GPL version 3
  * Please see the included DOCS/LICENSE.md for more information
  */
@@ -24,7 +24,7 @@ void Eluna::OnAddMember(Group* group, ObjectGuid guid)
 {
     START_HOOK(GROUP_EVENT_ON_MEMBER_ADD);
     Push(group);
-    Push(guid);
+    Push(&guid);
     CallAllFunctions(GroupEventBindings, key);
 }
 
@@ -32,7 +32,7 @@ void Eluna::OnInviteMember(Group* group, ObjectGuid guid)
 {
     START_HOOK(GROUP_EVENT_ON_MEMBER_INVITE);
     Push(group);
-    Push(guid);
+    Push(&guid);
     CallAllFunctions(GroupEventBindings, key);
 }
 
@@ -40,7 +40,7 @@ void Eluna::OnRemoveMember(Group* group, ObjectGuid guid, uint8 method)
 {
     START_HOOK(GROUP_EVENT_ON_MEMBER_REMOVE);
     Push(group);
-    Push(guid);
+    Push(&guid);
     Push(method);
     CallAllFunctions(GroupEventBindings, key);
 }
@@ -49,8 +49,8 @@ void Eluna::OnChangeLeader(Group* group, ObjectGuid newLeaderGuid, ObjectGuid ol
 {
     START_HOOK(GROUP_EVENT_ON_LEADER_CHANGE);
     Push(group);
-    Push(newLeaderGuid);
-    Push(oldLeaderGuid);
+    Push(&newLeaderGuid);
+    Push(&oldLeaderGuid);
     CallAllFunctions(GroupEventBindings, key);
 }
 
@@ -65,7 +65,7 @@ void Eluna::OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType)
 {
     START_HOOK(GROUP_EVENT_ON_CREATE);
     Push(group);
-    Push(leaderGuid);
+    Push(&leaderGuid);
     Push(groupType);
     CallAllFunctions(GroupEventBindings, key);
 }

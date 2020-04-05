@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+ * Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
  * This program is free software licensed under GPL version 3
  * Please see the included DOCS/LICENSE.md for more information
  */
@@ -9,9 +9,6 @@
 #include "LuaEngine.h"
 #include "BindingMap.h"
 #include "ElunaTemplate.h"
-
-#ifndef CLASSIC
-#ifndef TBC
 
 using namespace Hooks;
 
@@ -61,6 +58,3 @@ void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
     Push(passenger);
     CallAllFunctions(VehicleEventBindings, key);
 }
-
-#endif // CLASSIC
-#endif // TBC

@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -50,9 +50,11 @@ namespace LuaPacket
     int SetOpcode(lua_State* L, WorldPacket* packet)
     {
         uint32 opcode = Eluna::CHECKVAL<uint32>(L, 2);
-        if (opcode >= NUM_MSG_TYPES)
+
+        if (opcode >= OpcodeMisc::MAX_OPCODE)
             return luaL_argerror(L, 2, "valid opcode expected");
-        packet->SetOpcode((OpcodesList)opcode);
+
+        packet->SetOpcode((OpcodeClientList)opcode);
         return 0;
     }
 
@@ -169,7 +171,7 @@ namespace LuaPacket
     {
         ObjectGuid guid;
         (*packet) >> guid;
-        Eluna::Push(L, guid);
+        Eluna::Push(L, &guid);
         return 1;
     }
 
@@ -193,7 +195,7 @@ namespace LuaPacket
      */
     int WriteGUID(lua_State* L, WorldPacket* packet)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
         (*packet) << guid;
         return 0;
     }

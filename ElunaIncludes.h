@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2020 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -8,11 +8,13 @@
 #define _ELUNA_INCLUDES_H
 
 // Required
+#include "AllPackets.h"
 #include "AccountMgr.h"
 #include "AuctionHouseMgr.h"
 #include "Cell.h"
 #include "CellImpl.h"
 #include "Chat.h"
+#include "ChannelMgr.h"
 #include "Channel.h"
 #include "DB2Stores.h"
 #include "GameEventMgr.h"
@@ -29,6 +31,7 @@
 #include "ObjectMgr.h"
 #include "Opcodes.h"
 #include "Player.h"
+#include "RestMgr.h"
 #include "Pet.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
