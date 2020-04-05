@@ -75,7 +75,7 @@ namespace LuaObject
      */
     int GetGUID(lua_State* L, Object* obj)
     {
-        Eluna::Push(L, &obj->GET_GUID());
+        Eluna::Push(L, obj->GET_GUID());
         return 1;
     }
 

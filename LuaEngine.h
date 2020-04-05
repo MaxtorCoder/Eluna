@@ -240,6 +240,7 @@ public:
     static void Push(lua_State* luastate, const double);
     static void Push(lua_State* luastate, const std::string&);
     static void Push(lua_State* luastate, const char*);
+    static void Push(lua_State* luastate, ObjectGuid const guid, int type = 1);
     static void Push(lua_State* luastate, Object const* obj);
     static void Push(lua_State* luastate, WorldObject const* obj);
     static void Push(lua_State* luastate, Unit const* unit);

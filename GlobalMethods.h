@@ -231,7 +231,7 @@ namespace LuaGlobalFunctions
     int GetPlayerGUID(lua_State* L)
     {
         uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
-        Eluna::Push(L, &ObjectGuid::Create<HIGHGUID_PLAYER>(lowguid));
+        Eluna::Push(L, ObjectGuid::Create<HIGHGUID_PLAYER>(lowguid));
         return 1;
     }
 
@@ -247,7 +247,7 @@ namespace LuaGlobalFunctions
     int GetItemGUID(lua_State* L)
     {
         uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
-        Eluna::Push(L, &ObjectGuid::Create<HIGHGUID_ITEM>(lowguid));
+        Eluna::Push(L, ObjectGuid::Create<HIGHGUID_ITEM>(lowguid));
         return 1;
     }
 
@@ -268,7 +268,7 @@ namespace LuaGlobalFunctions
         uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 mapId = Eluna::CHECKVAL<uint32>(L, 3);
-        Eluna::Push(L, &ObjectGuid::Create<HIGHGUID_GAMEOBJECT>(mapId, entry, lowguid));
+        Eluna::Push(L, ObjectGuid::Create<HIGHGUID_GAMEOBJECT>(mapId, entry, lowguid));
         return 1;
     }
 
@@ -290,7 +290,7 @@ namespace LuaGlobalFunctions
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 mapId = Eluna::CHECKVAL<uint32>(L, 3);
 
-        Eluna::Push(L, &ObjectGuid::Create<HIGHGUID_UNIT>(mapId, entry, lowguid));
+        Eluna::Push(L, ObjectGuid::Create<HIGHGUID_UNIT>(mapId, entry, lowguid));
         return 1;
     }
 

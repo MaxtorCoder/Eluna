@@ -72,7 +72,7 @@ namespace LuaGuild
      */
     int GetLeaderGUID(lua_State* L, Guild* guild)
     {
-        Eluna::Push(L, &guild->GetLeaderGUID());
+        Eluna::Push(L, guild->GetLeaderGUID());
         return 1;
     }
 

@@ -244,7 +244,7 @@ namespace LuaItem
 
     int GetOwnerGUID(lua_State* L, Item* item)
     {
-        Eluna::Push(L, &item->GetOwnerGUID());
+        Eluna::Push(L, item->GetOwnerGUID());
         return 1;
     }
 

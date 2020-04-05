@@ -3141,7 +3141,7 @@ namespace LuaPlayer
         gossipPoi.Flags = flags;
         gossipPoi.Icon = icon;
         gossipPoi.Name = iconText;
-        gossipPoi.Pos = { x, y };
+        gossipPoi.Pos = TaggedPosition<Position::XY>(x, y);
 
         player->GetSession()->SendPacket(gossipPoi.Write());
         return 0;

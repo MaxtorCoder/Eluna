@@ -39,7 +39,7 @@ namespace LuaAura
      */
     int GetCasterGUID(lua_State* L, Aura* aura)
     {
-        Eluna::Push(L, &aura->GetCasterGUID());
+        Eluna::Push(L, aura->GetCasterGUID());
         return 1;
     }
 

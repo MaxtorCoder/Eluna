@@ -587,6 +587,33 @@ void Eluna::Push(lua_State* luastate, const char* str)
 {
     lua_pushstring(luastate, str);
 }
+/**
+ * type :
+ *  - Global
+ *  - MapSpecific
+ */
+void Eluna::Push(lua_State* luastate, ObjectGuid const guid, int type /*= 1*/)
+{
+    char errorBuffer[64];
+
+    uint64 objectGuid = uint64(type) << 4;
+    objectGuid = guid.GetCounter() << 8;
+    objectGuid = uint64(guid.GetHigh()) << 12;
+    switch (type)
+    {
+        case 1: //< Global
+            Push(luastate, objectGuid);
+            break;
+        case 2: //< MapSpecific
+            objectGuid = uint64(guid.GetMapId() << 16);
+            objectGuid = uint64(guid.GetEntry() << 20);
+            Push(luastate, objectGuid);
+            break;
+        default:
+            snprintf(errorBuffer, 64, "incorrect typeId");
+            break;
+    }
+}
 void Eluna::Push(lua_State* luastate, Pet const* pet)
 {
     Push<Creature>(luastate, pet);
@@ -768,6 +795,39 @@ template<> unsigned long Eluna::CHECKVAL<unsigned long>(lua_State* luastate, int
 }
 template<> ObjectGuid Eluna::CHECKVAL<ObjectGuid>(lua_State* luastate, int narg)
 {
+    uint64 guid = CHECKVAL<uint64>(luastate, narg);
+
+    uint32 type = guid >> 4;
+    HighGuid high = HighGuid(guid >> 8);
+    uint64 low = guid >> 12;
+
+    if (type == 1) // Global & RealmSpecific
+    {
+        switch (high)
+        {
+            case HIGHGUID_PLAYER:
+                return ObjectGuid::Create<HIGHGUID_PLAYER>(low);
+            case HIGHGUID_ITEM:
+                return ObjectGuid::Create<HIGHGUID_ITEM>(low);
+            default:
+                return ObjectGuid::Empty;
+        }
+    }
+    else if (type == 2)
+    {
+        uint16 mapId = uint16(guid >> 16);
+        uint32 entry = uint32(guid >> 20);
+        switch (high)
+        {
+            case HIGHGUID_GAMEOBJECT:
+                return ObjectGuid::Create<HIGHGUID_GAMEOBJECT>(mapId, entry, low);
+            case HIGHGUID_UNIT:
+                return ObjectGuid::Create<HIGHGUID_UNIT>(mapId, entry, low);
+            default:
+                return ObjectGuid::Empty;
+        }
+    }
+
     return ObjectGuid::Empty;
 }
 

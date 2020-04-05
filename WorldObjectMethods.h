@@ -1063,7 +1063,7 @@ namespace LuaWorldObject
      */
     int GetObjectGuid(lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(L, &obj->GET_GUID());
+        Eluna::Push(L, obj->GET_GUID());
         return 1;
     }
 };

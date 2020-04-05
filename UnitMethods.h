@@ -494,7 +494,7 @@ namespace LuaUnit
      */
     int GetOwnerGUID(lua_State* L, Unit* unit)
     {
-        Eluna::Push(L, &unit->GetOwnerGUID());
+        Eluna::Push(L, unit->GetOwnerGUID());
         return 1;
     }
     
@@ -516,7 +516,7 @@ namespace LuaUnit
      */
     int GetCreatorGUID(lua_State* L, Unit* unit)
     {
-        Eluna::Push(L, &unit->GetCreatorGUID());
+        Eluna::Push(L, unit->GetCreatorGUID());
         return 1;
     }
     
@@ -527,7 +527,7 @@ namespace LuaUnit
      */
     int GetCharmerGUID(lua_State* L, Unit* unit)
     {
-        Eluna::Push(L, &unit->GetCharmerGUID());
+        Eluna::Push(L, unit->GetCharmerGUID());
         return 1;
     }
     
@@ -538,7 +538,7 @@ namespace LuaUnit
      */
     int GetCharmGUID(lua_State* L, Unit* unit)
     {
-        Eluna::Push(L, &unit->GetCharmGUID());
+        Eluna::Push(L, unit->GetCharmGUID());
         return 1;
     }
     
@@ -549,7 +549,7 @@ namespace LuaUnit
      */
     int GetPetGUID(lua_State* L, Unit* unit)
     {
-        Eluna::Push(L, &unit->GetPetGUID());
+        Eluna::Push(L, unit->GetPetGUID());
         return 1;
     }
     
@@ -560,7 +560,7 @@ namespace LuaUnit
      */
     int GetControllerGUID(lua_State* L, Unit* unit)
     {
-        Eluna::Push(L, &unit->GetCharmerOrOwnerGUID());
+        Eluna::Push(L, unit->GetCharmerOrOwnerGUID());
         return 1;
     }
     
@@ -571,7 +571,7 @@ namespace LuaUnit
      */
     int GetControllerGUIDS(lua_State* L, Unit* unit)
     {
-        Eluna::Push(L, &unit->GetCharmerOrOwnerOrOwnGUID());
+        Eluna::Push(L, unit->GetCharmerOrOwnerOrOwnGUID());
         return 1;
     }
 
@@ -1115,7 +1115,7 @@ namespace LuaUnit
      */
     int GetCritterGUID(lua_State* L, Unit* unit)
     {
-        Eluna::Push(L, &unit->GetCritterGUID());
+        Eluna::Push(L, unit->GetCritterGUID());
         return 1;
     }
 

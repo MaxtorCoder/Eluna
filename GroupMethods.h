@@ -191,7 +191,7 @@ namespace LuaGroup
      */
     int GetLeaderGUID(lua_State* L, Group* group)
     {
-        Eluna::Push(L, &group->GetLeaderGUID());
+        Eluna::Push(L, group->GetLeaderGUID());
         return 1;
     }
 
@@ -202,7 +202,7 @@ namespace LuaGroup
      */
     int GetGUID(lua_State* L, Group* group)
     {
-        Eluna::Push(L, &group->GET_GUID());
+        Eluna::Push(L, group->GET_GUID());
         return 1;
     }
 
@@ -216,7 +216,7 @@ namespace LuaGroup
     {
         const char* name = Eluna::CHECKVAL<const char*>(L, 2);
 
-        Eluna::Push(L, &group->GetMemberGUID(name));
+        Eluna::Push(L, group->GetMemberGUID(name));
         return 1;
     }
 

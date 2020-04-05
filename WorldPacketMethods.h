@@ -171,7 +171,7 @@ namespace LuaPacket
     {
         ObjectGuid guid;
         (*packet) >> guid;
-        Eluna::Push(L, &guid);
+        Eluna::Push(L, guid);
         return 1;
     }
 
