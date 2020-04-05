@@ -318,12 +318,12 @@ public:
     /* Item */
     void OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget);
     bool OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest);
-    bool OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
-    bool OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
-    bool OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
+    bool OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets, ObjectGuid castId);
+    bool OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets, ObjectGuid castId);
+    bool OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& targets, ObjectGuid castId);
     bool OnExpire(Player* pPlayer, ItemTemplate const* pProto);
     bool OnRemove(Player* pPlayer, Item* item);
-    void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code);
+    void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code = "");
 
     /* Creature */
     void OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Creature* pTarget);
@@ -390,7 +390,7 @@ public:
     void OnLevelChanged(Player* pPlayer, uint8 oldLevel);
     void OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints);
     void OnTalentsReset(Player* pPlayer, bool noCost);
-    void OnMoneyChanged(Player* pPlayer, int32& amount);
+    void OnMoneyChanged(Player* pPlayer, int64& amount);
     void OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim);
     void OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental);
     void OnDuelRequest(Player* pTarget, Player* pChallenger);
@@ -422,7 +422,7 @@ public:
     void OnRemovePassenger(Vehicle* vehicle, Unit* passenger);
 
     /* AreaTrigger */
-    bool OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger);
+    bool OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger, bool entered);
 
     /* Weather */
     void OnChange(Weather* weather, uint32 zone, WeatherState state, float grade);
@@ -435,13 +435,13 @@ public:
 
     /* Guild */
     void OnAddMember(Guild* guild, Player* player, uint32 plRank);
-    void OnRemoveMember(Guild* guild, Player* player, bool isDisbanding);
+    void OnRemoveMember(Guild* guild, ObjectGuid guid, bool isDisbanding, bool isKicked);
     void OnMOTDChanged(Guild* guild, const std::string& newMotd);
     void OnInfoChanged(Guild* guild, const std::string& newInfo);
     void OnCreate(Guild* guild, Player* leader, const std::string& name);
     void OnDisband(Guild* guild);
-    void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
-    void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
+    void OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair);
+    void OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount);
     void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId, bool isDestBank, uint8 destContainer, uint8 destSlotId);
     void OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 playerGuid2, uint8 newRank);
     void OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId);

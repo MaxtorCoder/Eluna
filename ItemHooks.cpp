@@ -48,18 +48,18 @@ bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
     return CallAllFunctionsBool(ItemEventBindings, key);
 }
 
-bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
+bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets, ObjectGuid castId)
 {
     ObjectGuid guid = pItem->GET_GUID();
     bool castSpell = true;
 
-    if (!OnItemUse(pPlayer, pItem, targets))
+    if (!OnItemUse(pPlayer, pItem, targets, castId))
         castSpell = false;
 
     pItem = pPlayer->GetItemByGuid(guid);
     if (pItem)
     {
-        if (!OnItemGossip(pPlayer, pItem, targets))
+        if (!OnItemGossip(pPlayer, pItem, targets, castId))
             castSpell = false;
         pItem = pPlayer->GetItemByGuid(guid);
     }
@@ -73,7 +73,7 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
     return false;
 }
 
-bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
+bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets, ObjectGuid castId)
 {
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_USE, pItem->GetEntry(), true);
     Push(pPlayer);
@@ -91,6 +91,8 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
         Push(target);
     else
         Push();
+
+    Push(&castId);
 
     return CallAllFunctionsBool(ItemEventBindings, key, true);
 }

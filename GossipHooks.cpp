@@ -78,7 +78,7 @@ void Eluna::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 send
     CallAllFunctions(PlayerGossipBindings, key);
 }
 
-bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& /*targets*/)
+bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& /*targets*/, ObjectGuid casterId)
 {
     START_HOOK_WITH_RETVAL(ItemGossipBindings, GOSSIP_EVENT_ON_HELLO, pItem->GetEntry(), true);
     pPlayer->PlayerTalkClass->ClearMenus();

@@ -200,7 +200,7 @@ void Eluna::OnTalentsReset(Player* pPlayer, bool noCost)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
+void Eluna::OnMoneyChanged(Player* pPlayer, int64& amount)
 {
     START_HOOK(PLAYER_EVENT_ON_MONEY_CHANGE);
     Push(pPlayer);
@@ -214,7 +214,7 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<int32>(L, r);
+            amount = CHECKVAL<int64>(L, r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }

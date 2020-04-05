@@ -28,6 +28,7 @@
 #include "Mail.h"
 #include "MapManager.h"
 #include "ObjectAccessor.h"
+#include "ObjectGuid.h"
 #include "ObjectMgr.h"
 #include "Opcodes.h"
 #include "Player.h"

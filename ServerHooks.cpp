@@ -112,11 +112,12 @@ void Eluna::OnLuaStateOpen()
 }
 
 // AreaTrigger
-bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
+bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger, bool entered)
 {
     START_HOOK_WITH_RETVAL(TRIGGER_EVENT_ON_TRIGGER, false);
     Push(pPlayer);
     Push(pTrigger->ID);
+    Push(entered);
     return CallAllFunctionsBool(ServerEventBindings, key);
 }
 

@@ -29,12 +29,13 @@ void Eluna::OnAddMember(Guild* guild, Player* player, uint32 plRank)
     CallAllFunctions(GuildEventBindings, key);
 }
 
-void Eluna::OnRemoveMember(Guild* guild, Player* player, bool isDisbanding)
+void Eluna::OnRemoveMember(Guild* guild, ObjectGuid guid, bool isDisbanding, bool isKicked)
 {
     START_HOOK(GUILD_EVENT_ON_REMOVE_MEMBER);
     Push(guild);
-    Push(player);
+    Push(&guid);
     Push(isDisbanding);
+    Push(isKicked);
     CallAllFunctions(GuildEventBindings, key);
 }
 
@@ -70,7 +71,7 @@ void Eluna::OnDisband(Guild* guild)
     CallAllFunctions(GuildEventBindings, key);
 }
 
-void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair)
+void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_WITHDRAW);
     Push(guild);
@@ -86,7 +87,7 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<uint32>(L, r);
+            amount = CHECKVAL<uint64>(L, r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }
@@ -97,7 +98,7 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
     CleanUpStack(4);
 }
 
-void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
+void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_DEPOSIT);
     Push(guild);
@@ -112,7 +113,7 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<uint32>(L, r);
+            amount = CHECKVAL<uint64>(L, r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }
